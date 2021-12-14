@@ -1,11 +1,14 @@
 const expect = require('chai').expect
-const { parseInches, parseFraction } = require('../dist/index')
+const { parseFeet, parseInches, parseFraction } = require('../dist/index')
 
 
 describe('test parseFraction()', () => {
   it('should return 0 when input is undefined', () => {
     const result = parseFraction()
     expect(result).to.equal(0)
+  })
+  it('should throw error when input is a letter', () => {
+    expect(() => parseFraction('a')).to.throw()
   })
   it('should throw exception when input does not contain a forward slash', () => {
     expect(() => parseFraction('5')).to.throw()
@@ -44,6 +47,9 @@ describe('test parseInches()', () => {
   it('should return 0 when input is undefined', () => {
     const result = parseInches()
     expect(result).to.equal(0)
+  })
+  it('should throw error when input is a letter', () => {
+    expect(() => parseInches('a')).to.throw()
   })
   it('should parse a string with just a number', () => {
     const result = parseInches('5')
@@ -144,5 +150,63 @@ describe('test parseInches()', () => {
   it('should parse a number and a fraction separated by a space followed by two single quotes', () => {
     const result = parseInches('5 1/4\'\'')
     expect(result).to.equal(5.25)
+  })
+})
+
+
+describe('test parseFeet()', () => {
+  it('should return 0 when input is undefined', () => {
+    const result = parseFeet()
+    expect(result).to.equal(0)
+  })
+  it('should throw error when input is a letter', () => {
+    expect(() => parseFeet('a')).to.throw()
+  })
+  it('should parse a string with just a number', () => {
+    const result = parseFeet('5')
+    expect(result).to.equal(5)
+  })
+  it('should parse a string with a number and spaces', () => {
+    const result = parseFeet(' 5 ')
+    expect(result).to.equal(5)
+  })
+  it('should parse a number with a decimal', () => {
+    const result = parseFeet('5.3')
+    expect(result).to.equal(5.3)
+  })
+  it('should parse a number with a single quote', () => {
+    const result = parseFeet('5\'')
+    expect(result).to.equal(5)
+  })
+  it('should parse a number with a single quote after a space', () => {
+    const result = parseFeet('5 \'')
+    expect(result).to.equal(5)
+  })
+  it('should parse a number with "ft"', () => {
+    const result = parseFeet('5ft')
+    expect(result).to.equal(5)
+  })
+  it('should parse a number with "ft" after a space', () => {
+    const result = parseFeet('5 ft')
+    expect(result).to.equal(5)
+  })
+  it('should parse a number with "feet"', () => {
+    const result = parseFeet('5feet')
+    expect(result).to.equal(5)
+  })
+  it('should parse a number with "feet" after a space', () => {
+    const result = parseFeet('5 feet')
+    expect(result).to.equal(5)
+  })
+  it('should parse a number with "foot"', () => {
+    const result = parseFeet('5foot')
+    expect(result).to.equal(5)
+  })
+  it('should parse a number with "foot after a space', () => {
+    const result = parseFeet('5 foot')
+    expect(result).to.equal(5)
+  })
+  it('should throw an error when there are inches but no feet', () => {
+    expect(() => parseFeet('10"')).to.throw()
   })
 })

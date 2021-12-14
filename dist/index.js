@@ -185,14 +185,15 @@ exports.parseInchesAndFeet = parseInchesAndFeet;
 function parseFeet(input) {
     if (!input)
         return 0;
-    let str = input
-        .replaceAll('feet', '\'')
-        .replaceAll('foot', '\'')
-        .replaceAll('ft', '\'');
-    if (str.includes('\'')) {
-        const index = str.indexOf('\'');
+    let str = standardizeFeetSymbol(input);
+    // Take only the substring up until a single quote
+    const index = str.indexOf('\'');
+    if (index !== -1) {
         str = str.substring(0, index).trim();
     }
+    if (!str)
+        return 0;
+    // Try to convert the string to a number
     const num = Number(str);
     if (isNumber(num)) {
         return num;
@@ -217,13 +218,7 @@ exports.parseFeet = parseFeet;
 function parseInches(input) {
     if (!input)
         return 0;
-    // Standardize feet symbol to just a single quote.
-    // First change two single-quotes to a double-quote so we don't confuse with the feet symbol.
-    let str = input
-        .replaceAll('\'\'', '"')
-        .replaceAll('feet', '\'')
-        .replaceAll('foot', '\'')
-        .replaceAll('ft', '\'');
+    let str = standardizeFeetSymbol(input);
     // If feet are included in input then strip it out to leave just the inches
     const indexFt = str.indexOf('\'');
     if (indexFt !== -1 && indexFt < str.length) {
@@ -231,14 +226,7 @@ function parseInches(input) {
     }
     // Remove inches unit label and replace by space for parsing.
     // Also replace dash with a space (for fractions like 5-1/4").
-    str = str
-        .replaceAll('inches', ' ')
-        .replaceAll('inch', ' ')
-        .replaceAll('in', ' ')
-        .replaceAll('"', ' ')
-        .replaceAll('\'\'', ' ')
-        .replaceAll('-', ' ')
-        .trim();
+    str = replaceInchSymbolBySpace(str);
     let inches = 0;
     const arr = str.split(' ');
     arr.forEach(s => {
@@ -264,24 +252,44 @@ exports.parseInches = parseInches;
 function parseFraction(input) {
     if (!input)
         return 0;
-    // Try to get just the fractional portion. This will strip out things like spaces and double quotes.
-    const reg = input.match(/\d+([\/]\d+)?/g);
-    if (!reg || !reg.length || !reg[0]) {
-        return 0;
+    let str = replaceInchSymbolBySpace(input);
+    if (!str.includes('/')) {
+        throw new Error(INVALID_FORMAT_MSG);
     }
-    const str = reg[0];
-    if (str.includes('/')) {
-        const arr = str.split('/');
-        const numerator = Number(arr[0]);
-        const denominator = Number(arr[1]);
-        if (!isNumber(numerator) || !isNumber(denominator)) {
-            throw new Error(INVALID_FORMAT_MSG);
-        }
-        if (!denominator) {
-            throw new Error('Divide by zero');
-        }
-        return numerator / denominator;
+    const arr = str.split('/');
+    const numerator = Number(arr[0]);
+    const denominator = Number(arr[1]);
+    if (!isNumber(numerator) || !isNumber(denominator)) {
+        throw new Error(INVALID_FORMAT_MSG);
     }
-    throw new Error(INVALID_FORMAT_MSG);
+    if (!denominator) {
+        throw new Error('Divide by zero');
+    }
+    return numerator / denominator;
 }
 exports.parseFraction = parseFraction;
+/**
+ * Standardize feet symbol to just a single quote.
+ * First change two single-quotes to a double-quote so we don't confuse feet and inches symbols.
+ */
+function standardizeFeetSymbol(input) {
+    return input
+        .replaceAll('\'\'', '"')
+        .replaceAll('feet', '\'')
+        .replaceAll('foot', '\'')
+        .replaceAll('ft', '\'')
+        .trim();
+}
+/**
+ * Replaces all inches symbols by spaces to help parse the string.
+ */
+function replaceInchSymbolBySpace(input) {
+    return input
+        .replaceAll('inches', ' ')
+        .replaceAll('inch', ' ')
+        .replaceAll('in', ' ')
+        .replaceAll('"', ' ')
+        .replaceAll('\'\'', ' ')
+        .replaceAll('-', ' ')
+        .trim();
+}
