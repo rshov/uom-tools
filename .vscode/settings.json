@@ -1,0 +1,21 @@
+{
+  "eslint.validate": [
+    "typescript",
+    "typescriptreact"
+  ],
+  // "editor.codeActionsOnSave": {
+  //   "source.fixAll": true,
+  //   "source.organizeImports": true
+  // },
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "javascript.format.semicolons": "remove",
+  "typescript.format.semicolons": "remove",
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "typescript.format.insertSpaceBeforeFunctionParenthesis": true
+}

@@ -1,0 +1,32 @@
+{
+  "name": "uom-tools",
+  "version": "1.0.0",
+  "description": "Tools to parse and format amounts in different units of measure.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "lint": "tslint --project \"./tsconfig.json\"",
+    "test": "mocha --reporter spec"
+  },
+  "keywords": [],
+  "author": "rshov",
+  "license": "MIT",
+  "dependencies": {
+    "convert": "^4.3.0",
+    "numeral": "^2.0.6"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.12",
+    "@types/numeral": "^2.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.6.0",
+    "@typescript-eslint/parser": "^5.6.0",
+    "chai": "^4.3.4",
+    "eslint": "^8.4.1",
+    "mocha": "^9.1.3",
+    "tslint": "^6.1.3",
+    "typescript": "^4.5.3"
+  }
+}
