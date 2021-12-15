@@ -155,35 +155,34 @@ export function parseMillimeters (input?: string) {
  * @returns The number of feet as a decimal number
  * @throws an error if the string format cannot be parsed
  */
-export function parseInchesAndFeet (input?: string, targetUnit: 'ft' | 'in' = 'in') {
+export function parseInchesAndFeet (input?: string) {
   if (!input) return 0
-  // Remove all spaces and replace two single-quotes with a double quote
-  const str = input.replaceAll(' ', '').replaceAll('\'\'', '"')
-  const num = Number(str)
-  if (isNumber(num)) {
-    return num
-  }
-  else if (input.includes('feet') || input.includes('foot') || input.includes('ft') || input.includes('\'')) {
-    const feet = parseFeet(input) //TODO: str or input?
 
-    const array = str.split('\'')
-    let inches = 0
-    if (array.length > 1) {
-      inches = parseInches(array[1])
-    }
-    if (isNaN(feet) || isNaN(inches)) {
-      throw new Error(INVALID_FORMAT_MSG)
-    }
-    return (feet * 12) + inches
+  let str = standardizeFeetSymbol(input)
+  str = replaceInchSymbolBySpace(str)
+
+  let feet = 0, inches = 0
+
+  const indexFeetSymbol = str.indexOf('\'')
+
+  // If the input contains feet then parse the feet
+  if (indexFeetSymbol !== -1) {
+    const s = str.substring(0, indexFeetSymbol)
+    feet = parseFeet(s)
   }
-  else if (str.indexOf('"') !== -1) {
-    const inches = parseInches(str)
-    if (isNaN(inches)) {
-      throw new Error(INVALID_FORMAT_MSG)
-    }
-    return inches
+
+  // Find the substring containing just the inches; this will be entire string if no feet are given
+  let strInches = str
+  if (indexFeetSymbol !== -1) {
+    strInches = (indexFeetSymbol + 1 < str.length)
+      ? str.substring(indexFeetSymbol + 1)
+      : ''
   }
-  throw new Error(INVALID_FORMAT_MSG)
+
+  inches = parseInches(strInches)
+
+  // Convert result to inches
+  return (feet * 12) + inches
 }
 
 
