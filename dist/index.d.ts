@@ -1,26 +1,99 @@
+declare type LengthUOM = 'mm' | // Millimeters allowing decimals (i.e. 3.4)
+'cm' | // Centimeters allowing decimals (i.e. 3.4)
+'m' | // Meters allowing decimals (i.e. 3.4)
+'in' | // Inches allowing decimals (i.e. 3.4558)
+'ft';
+declare type LengthDisplayFormat = 'mm' | // i.e. 3 mm
+'cm' | // i.e. 3.4 cm
+'m' | // i.e. 3.45 m
+'in' | // Inches shown in the chosen InchFractionFormat (i.e. 30.5" or 30-1/2")
+'ft' | // Feet allowing decimals (i.e. 3.4')
+'ft_in';
+declare type InchDisplayFormat = 'in' | // Inches allowing decimals (i.e. 3.25)
+'in16' | // Inches as fraction, 16ths of an inch (i.e. 3/16 or 1/4)
+'in32' | // Inches as fraction, 32nds of an inch (i.e. 3/32 or 1/4)
+'in64';
+/**
+ * Formats a number of inches for display as whole feet, ignoring any amount beyond the last whole foot.
+ * @param {Number} inches The number of inches to format
+ * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
+ * @returns {String} A formatted string with the number of feet
+ */
+export declare function formatWholeFeet(inches: number, showUnits?: boolean): string;
+/**
+ * Formats the number of inches to be displayed as a fractional value.
+ * For example, 3.25 would become "3 - 1/4".
+ * @param {Number} inches The decimal inches to format
+ * @param {String} inchFormat How to display inches
+ * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
+ * @returns {String} A formatted string with the fractional inches.
+ */
+export declare function formatFractionalInches(inches: number, inchFormat?: InchDisplayFormat, showUnits?: boolean): string;
+/**
+ * Formats a length for display in feet and fractional inches.
+ * If there are no inches to display then units are "ft", otherwise uses single quote.
+ * For example: 3' 4-1/8"  -or-  4 ft
+ * @param {Number} inches The length in inches to format
+ * @param {String} inchDisplay How to display inches
+ * @returns {String} A formatted string with the number of inches
+ */
+export declare function formatFeetAndFractionalInches(totalInches: number, inchDisplay: InchDisplayFormat): string;
+/**
+ * Formats a length for display in feet and decimal inches.
+ * If there are no inches to display then units are "ft", otherwise uses single quote.
+ * For example: 3' 4.125"  -or-  4 ft
+ * @param {Number} inches The length in inches to format
+ * @returns {String} A formatted string with the number of inches
+ */
+export declare function formatFeetAndDecimalInches(totalInches: number): string;
+/**
+ * Formats a length for display in inches, allowing up to 4 decimal places.
+ * @param {Number} inches The number of inches to format
+ * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
+ * @returns {String} A formatted string with the number of inches
+ */
+export declare function formatDecimalInches(inches: number, showUnits?: boolean): string;
+/**
+ * Formats a length for display in millimeters.
+ * @param {Number} inches The number of inches to display in millimeters
+ * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
+ * @returns {String} A formatted string with the number of millimeters
+ */
+export declare function formatMillimeters(inches: number, showUnits?: boolean): string;
+/**
+ * Formats a length for display in centimeters, allowing up to 1 decimal place.
+ * @param {Number} inches The number of inches to display in centimeters
+ * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
+ * @returns {String} A formatted string with the number of centimeters
+ */
+export declare function formatCentimeters(inches: number, showUnits?: boolean): string;
+/**
+ * Formats a length for display in meters, allowing up to 2 decimal places.
+ * @param {Number} inches The number of inches to display in meters
+ * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
+ * @returns {String} A formatted string with the number of meters
+ */
+export declare function formatMeters(inches: number, showUnits?: boolean): string;
+/**
+ * Formats a length for display in the given unit of measure.
+ * @param {Number} inches The number of inches to be formatted
+ * @param {String} lengthFormat The units to display, enums.LengthUOM
+ * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
+ * @param {Boolean} allowFeet (n/a for metric units); true to show feet and inches, false for only inches
+ * @returns {String} A formatted string in the given unit of measure
+ */
+export declare function formatLength(inches?: number, lengthFormat?: LengthDisplayFormat, inchFormat?: InchDisplayFormat, showUnits?: boolean): string;
 /**
  * Formats a number of feet for display with 2 decimal places and the units 'ft'.
  */
-export declare function formatFeetDecimal(feet?: number): string;
-/**
- * Formats a number of inches for display as millimeters.
- */
-export declare function formatMillimeters(inches?: number): string;
-/**
- * Formats a number of inches for display as centimeters.
- */
-export declare function formatCentimeters(inches?: number): string;
-/**
- * Formats a number of watts for display with no decimal places and the units 'W'.
- */
-export declare function formatWatts(watts?: number, hideUnits?: boolean): string;
+export declare function formatFeetDecimal(feet?: number, showUnits?: boolean): string;
 /**
  * Parses a string and returns a length in the target units, or inches if not specified.
  * Supports parsing lengths in millimeters, centimeters, meters, feet and inches (fractional or decimal).
  * @returns The length as a decimal number in the target units
  * @throws an error if the string format cannot be parsed
  */
-export declare function parseLength(input?: string, targetUnit?: 'mm' | 'cm' | 'm' | 'in' | 'ft'): number;
+export declare function parseLength(input?: string, targetUnit?: LengthUOM): number;
 export declare function parseMeters(input?: string): number;
 export declare function parseCentimeters(input?: string): number;
 export declare function parseMillimeters(input?: string): number;
@@ -71,3 +144,4 @@ export declare function parseInches(input?: string): number;
  * @throws an error if the string cannot be parsed as a fraction
  */
 export declare function parseFraction(input?: string): number;
+export {};
