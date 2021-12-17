@@ -1,4 +1,4 @@
-import numeral = require('numeral')
+const numeral = require('numeral')
 import convert from 'convert'
 
 const INVALID_FORMAT_MSG = 'Invalid format'
@@ -153,7 +153,7 @@ export function formatFractionalInches (
  * @param {String} inchDisplay How to display inches
  * @returns {String} A formatted string with the number of inches
  */
-export function formatFeetAndFractionalInches (totalInches: number, inchDisplay: InchDisplayFormat) {
+export function formatFeetAndFractionalInches (totalInches: number, inchDisplay: InchDisplayFormat = 'in16') {
 
   // Count how many whole feet there are
   const wholeFeet = Math.floor(totalInches / 12)

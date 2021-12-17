@@ -1,8 +1,8 @@
 {
   "name": "uom-tools",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Tools to parse and format amounts in different units of measure.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",

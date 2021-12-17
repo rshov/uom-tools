@@ -37,7 +37,7 @@ export declare function formatFractionalInches(inches: number, inchFormat?: Inch
  * @param {String} inchDisplay How to display inches
  * @returns {String} A formatted string with the number of inches
  */
-export declare function formatFeetAndFractionalInches(totalInches: number, inchDisplay: InchDisplayFormat): string;
+export declare function formatFeetAndFractionalInches(totalInches: number, inchDisplay?: InchDisplayFormat): string;
 /**
  * Formats a length for display in feet and decimal inches.
  * If there are no inches to display then units are "ft", otherwise uses single quote.

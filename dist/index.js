@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseFraction = exports.parseInches = exports.parseFeet = exports.parseInchesAndFeet = exports.parseMillimeters = exports.parseCentimeters = exports.parseMeters = exports.parseLength = exports.formatFeetDecimal = exports.formatLength = exports.formatMeters = exports.formatCentimeters = exports.formatMillimeters = exports.formatDecimalInches = exports.formatFeetAndDecimalInches = exports.formatFeetAndFractionalInches = exports.formatFractionalInches = exports.formatWholeFeet = void 0;
-const numeral = require("numeral");
+const numeral = require('numeral');
 const convert_1 = require("convert");
 const INVALID_FORMAT_MSG = 'Invalid format';
 /**
@@ -115,7 +115,7 @@ exports.formatFractionalInches = formatFractionalInches;
  * @param {String} inchDisplay How to display inches
  * @returns {String} A formatted string with the number of inches
  */
-function formatFeetAndFractionalInches(totalInches, inchDisplay) {
+function formatFeetAndFractionalInches(totalInches, inchDisplay = 'in16') {
     // Count how many whole feet there are
     const wholeFeet = Math.floor(totalInches / 12);
     // Get the remaining length in inches (should be less than a foot, could be zero)
