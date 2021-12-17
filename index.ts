@@ -316,7 +316,7 @@ export function parseLength (input?: string, targetUnit: LengthUOM = 'in') {
   }
 
   if (input.includes('feet') || input.includes('foot') || input.includes('ft') || input.includes('\'') || input.includes('in') || input.includes('"')) {
-    const inches = parseInchesAndFeet(input)
+    const inches = parseInchesAndFeet(input, targetUnit)
     return convert(inches, 'inches').to(targetUnit)
   }
   else if (input.includes('mm') || input.includes('millimeter')) {
@@ -332,10 +332,14 @@ export function parseLength (input?: string, targetUnit: LengthUOM = 'in') {
     return convert(m, 'meters').to(targetUnit)
   }
   else {
-    // If no units specified then assume inches
-    const inches = parseInchesAndFeet(input)
-    return convert(inches, 'inches').to(targetUnit)
+    // No units were specified, so try to parse as a number
+    const num = Number(input.trim())
+    if (isNumber(num)) {
+      return num
+    }
   }
+
+  throw new Error(INVALID_FORMAT_MSG)
 }
 
 
@@ -404,7 +408,7 @@ export function parseMillimeters (input?: string) {
  * @returns The number of feet as a decimal number
  * @throws an error if the string format cannot be parsed
  */
-export function parseInchesAndFeet (input?: string) {
+export function parseInchesAndFeet (input?: string, targetUnit: LengthUOM = 'in') {
   if (!input) return 0
 
   let str = standardizeFeetSymbol(input)

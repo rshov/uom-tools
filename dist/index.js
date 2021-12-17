@@ -254,7 +254,7 @@ function parseLength(input, targetUnit = 'in') {
         return 0;
     }
     if (input.includes('feet') || input.includes('foot') || input.includes('ft') || input.includes('\'') || input.includes('in') || input.includes('"')) {
-        const inches = parseInchesAndFeet(input);
+        const inches = parseInchesAndFeet(input, targetUnit);
         return (0, convert_1.default)(inches, 'inches').to(targetUnit);
     }
     else if (input.includes('mm') || input.includes('millimeter')) {
@@ -270,10 +270,13 @@ function parseLength(input, targetUnit = 'in') {
         return (0, convert_1.default)(m, 'meters').to(targetUnit);
     }
     else {
-        // If no units specified then assume inches
-        const inches = parseInchesAndFeet(input);
-        return (0, convert_1.default)(inches, 'inches').to(targetUnit);
+        // No units were specified, so try to parse as a number
+        const num = Number(input.trim());
+        if (isNumber(num)) {
+            return num;
+        }
     }
+    throw new Error(INVALID_FORMAT_MSG);
 }
 exports.parseLength = parseLength;
 function parseMeters(input) {
@@ -341,7 +344,7 @@ exports.parseMillimeters = parseMillimeters;
  * @returns The number of feet as a decimal number
  * @throws an error if the string format cannot be parsed
  */
-function parseInchesAndFeet(input) {
+function parseInchesAndFeet(input, targetUnit = 'in') {
     if (!input)
         return 0;
     let str = standardizeFeetSymbol(input);

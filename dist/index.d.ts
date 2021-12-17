@@ -117,7 +117,7 @@ export declare function parseMillimeters(input?: string): number;
  * @returns The number of feet as a decimal number
  * @throws an error if the string format cannot be parsed
  */
-export declare function parseInchesAndFeet(input?: string): number;
+export declare function parseInchesAndFeet(input?: string, targetUnit?: LengthUOM): number;
 /**
  * Parses a string containing feet and returns the number of feet.
  * Note that the string may also contain inches after the feet but only the feet number will be returned.

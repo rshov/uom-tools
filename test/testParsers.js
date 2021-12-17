@@ -363,90 +363,79 @@ describe('test parseMeters()', () => {
 
 describe('test parseLength()', () => {
   it('should return 0 when input is undefined', () => {
-    const result = parseLength()
-    expect(result).to.equal(0)
+    expect(parseLength()).to.equal(0)
   })
   it('should throw error when input is a letter', () => {
     expect(() => parseLength('a')).to.throw()
   })
   it('should parse a string with just a number', () => {
-    const result = parseLength('5')
-    expect(result).to.equal(5)
+    expect(parseLength('5')).to.equal(5)
   })
   it('should parse a string with a number and spaces', () => {
-    const result = parseLength(' 5 ')
-    expect(result).to.equal(5)
+    expect(parseLength(' 5 ')).to.equal(5)
   })
   it('should parse a number with a decimal', () => {
-    const result = parseLength('5.3')
-    expect(result).to.equal(5.3)
+    expect(parseLength('5.3')).to.equal(5.3)
   })
-  it('should parse a number with "m"', () => {
-    const result = parseLength('5 m', 'm')
-    expect(result).to.equal(5)
+  it('should parse a number with no units specified into the target unit', () => {
+    expect(parseLength('10', 'ft')).to.equal(10)
+    expect(parseLength('10', 'in')).to.equal(10)
+    expect(parseLength('10', 'mm')).to.equal(10)
+    expect(parseLength('10', 'cm')).to.equal(10)
+    expect(parseLength('10', 'm')).to.equal(10)
   })
-  it('should parse a number with "cm"', () => {
-    const result = parseLength('5 cm', 'cm')
-    expect(result).to.equal(5)
+  it('should parse meters', () => {
+    expect(parseLength('5 m', 'm')).to.equal(5)
+    expect(parseLength('5 meter', 'm')).to.equal(5)
+    expect(parseLength('5 meters', 'm')).to.equal(5)
   })
-  it('should parse a number with "mm"', () => {
-    const result = parseLength('5 mm', 'mm')
-    expect(result).to.equal(5)
+  it('should parse centimeters', () => {
+    expect(parseLength('5 cm', 'cm')).to.equal(5)
+    expect(parseLength('5 centimeter', 'cm')).to.equal(5)
+    expect(parseLength('5 centimeters', 'cm')).to.equal(5)
   })
-  it('should parse a number with feet (single quote)', () => {
-    const result = parseLength('5 \'', 'ft')
-    expect(result).to.equal(5)
+  it('should parse millimeters', () => {
+    expect(parseLength('5 mm', 'mm')).to.equal(5)
+    expect(parseLength('5 millimeter', 'mm')).to.equal(5)
+    expect(parseLength('5 millimeters', 'mm')).to.equal(5)
   })
-  it('should parse a number with feet "ft"', () => {
-    const result = parseLength('5 ft', 'ft')
-    expect(result).to.equal(5)
+  it('should parse feet', () => {
+    expect(parseLength('5 \'', 'ft')).to.equal(5)
+    expect(parseLength('5 ft', 'ft')).to.equal(5)
+    expect(parseLength('5 feet', 'ft')).to.equal(5)
+    expect(parseLength('5 foot', 'ft')).to.equal(5)
   })
-  it('should parse a number with inches (double quote)', () => {
-    const result = parseLength('5"', 'in')
-    expect(result).to.equal(5)
+  it('should parse inches', () => {
+    expect(parseLength('5"', 'in')).to.equal(5)
+    expect(parseLength('5\'\'', 'in')).to.equal(5)
+    expect(parseLength('5 in', 'in')).to.equal(5)
+    expect(parseLength('5 inch', 'in')).to.equal(5)
+    expect(parseLength('5 inches', 'in')).to.equal(5)
   })
-  it('should parse a number with inches "in"', () => {
-    const result = parseLength('5 in', 'in')
-    expect(result).to.equal(5)
+  it('should parse feet and inches', () => {
+    expect(parseLength('5\' 3"', 'in')).to.equal(63)
+    expect(parseLength('5\' 3"', 'ft')).to.equal(5.25)
   })
-  it('should parse feet and inches using quotes and return inches', () => {
-    const result = parseLength('5\' 3"', 'in')
-    expect(result).to.equal(63)
-  })
-  it('should parse feet and inches and a fraction using quotes and return inches', () => {
-    const result = parseLength('5\' 3-1/2"', 'in')
-    expect(result).to.equal(63.5)
-  })
-  it('should parse feet and inches using quotes and return feet', () => {
-    const result = parseLength('5\' 3"', 'ft')
-    expect(result).to.equal(5.25)
-  })
-  it('should parse feet and inches and a fraction using quotes and return feet', () => {
-    const result = parseLength('5\' 3-3/4"', 'ft')
-    expect(result).to.equal(5.3125)
+  it('should parse feet and inches with a fraction', () => {
+    expect(parseLength('5\' 4-1/2"', 'in')).to.equal(64.5)
+    expect(parseLength('5\' 4-1/2"', 'ft')).to.equal(5.375)
   })
   it('should convert mm to in', () => {
-    const result = parseLength('254 mm', 'in')
-    expect(result).to.equal(10)
+    expect(parseLength('254 mm', 'in')).to.equal(10)
   })
   it('should convert in to mm', () => {
-    const result = parseLength('10"', 'mm')
-    expect(result).to.equal(254)
+    expect(parseLength('10"', 'mm')).to.equal(254)
   })
   it('should convert mm to cm', () => {
-    const result = parseLength('100 mm', 'cm')
-    expect(result).to.equal(10)
+    expect(parseLength('100 mm', 'cm')).to.equal(10)
   })
   it('should convert cm to meters', () => {
-    const result = parseLength('150 cm', 'm')
-    expect(result).to.equal(1.5)
+    expect(parseLength('150 cm', 'm')).to.equal(1.5)
   })
   it('should convert inches to feet', () => {
-    const result = parseLength('30 in', 'ft')
-    expect(result).to.equal(2.5)
+    expect(parseLength('30 in', 'ft')).to.equal(2.5)
   })
   it('should convert feet to inches', () => {
-    const result = parseLength('2.5 ft', 'in')
-    expect(result).to.equal(30)
+    expect(parseLength('2.5 ft', 'in')).to.equal(30)
   })
 })
