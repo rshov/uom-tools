@@ -5,6 +5,11 @@ const {
   formatFeetAndDecimalInches,
   formatDecimalInches,
   formatFeetDecimal,
+  formatWholeFeet,
+  formatMillimeters,
+  formatCentimeters,
+  formatMeters,
+  formatLength
 } = require('../dist/index')
 
 
@@ -140,10 +145,119 @@ describe('test formatFeetDecimal()', () => {
   })
 })
 
-  //TODO
-// describe('test formatWholeFeet()', () => {
-// describe('test formatFeetDecimal()', () => {
-// describe('test formatMillimeters()', () => {
-// describe('test formatCentimeters()', () => {
-// describe('test formatMeters()', () => {
-// describe('test formatLength()', () => {
+
+describe('test formatWholeFeet()', () => {
+  it('should format 0', () => {
+    expect(formatWholeFeet(0)).to.equal('0')
+  })
+  it('should format whole number', () => {
+    expect(formatWholeFeet(24)).to.equal('2')
+  })
+  it('should format with comma for thousands', () => {
+    expect(formatWholeFeet(12000)).to.equal('1,000')
+  })
+  it('should round down a number with decimals', () => {
+    expect(formatWholeFeet(24.85)).to.equal('2')
+  })
+  it('should show units "\'"', () => {
+    expect(formatWholeFeet(30, true)).to.equal('2\'')
+  })
+})
+
+
+describe('test formatMillimeters()', () => {
+  it('should format 0', () => {
+    expect(formatMillimeters(0)).to.equal('0')
+  })
+  it('should format whole number', () => {
+    expect(formatMillimeters(10)).to.equal('254')
+  })
+  it('should format with comma for thousands', () => {
+    expect(formatMillimeters(40)).to.equal('1,016')
+  })
+  it('should round a number with decimals', () => {
+    expect(formatMillimeters(1)).to.equal('25')
+    expect(formatMillimeters(2)).to.equal('51')
+  })
+  it('should show units "mm"', () => {
+    expect(formatMillimeters(1, true)).to.equal('25 mm')
+  })
+})
+
+
+describe('test formatCentimeters()', () => {
+  it('should format 0', () => {
+    expect(formatCentimeters(0)).to.equal('0')
+  })
+  it('should format whole number', () => {
+    expect(formatCentimeters(100)).to.equal('254')
+  })
+  it('should format with comma for thousands', () => {
+    expect(formatCentimeters(400)).to.equal('1,016')
+  })
+  it('should round to 1 decimal place', () => {
+    expect(formatCentimeters(1)).to.equal('2.5')
+    expect(formatCentimeters(2)).to.equal('5.1')
+  })
+  it('should show units "cm"', () => {
+    expect(formatCentimeters(10, true)).to.equal('25.4 cm')
+  })
+})
+
+
+describe('test formatMeters()', () => {
+  it('should format 0', () => {
+    expect(formatMeters(0)).to.equal('0')
+  })
+  it('should format whole number', () => {
+    expect(formatMeters(10000)).to.equal('254')
+  })
+  it('should format with comma for thousands', () => {
+    expect(formatMeters(40000)).to.equal('1,016')
+  })
+  it('should round to 2 decimal places', () => {
+    expect(formatMeters(10)).to.equal('0.25')
+    expect(formatMeters(20)).to.equal('0.51')
+  })
+  it('should show units "m"', () => {
+    expect(formatMeters(100, true)).to.equal('2.54 m')
+  })
+})
+
+
+// LengthFormatDisplay: "mm" | "cm" | "m" | "in" | "ft" | "ft_in"
+describe('test formatLength()', () => {
+  it('should format 0', () => {
+    expect(formatLength(0, 'mm')).to.equal('0')
+    expect(formatLength(0, 'cm')).to.equal('0')
+    expect(formatLength(0, 'm')).to.equal('0')
+    expect(formatLength(0, 'in')).to.equal('0')
+    expect(formatLength(0, 'ft')).to.equal('0')
+    expect(formatLength(0, 'ft_in')).to.equal('0 ft')
+  })
+  it('should format in the given unit', () => {
+    expect(formatLength(1, 'mm')).to.equal('25')
+    expect(formatLength(1, 'cm')).to.equal('2.5')
+    expect(formatLength(100, 'm')).to.equal('2.54')
+    expect(formatLength(20.5, 'in', 'in')).to.equal('20.5')
+    expect(formatLength(20.5, 'in', 'in16')).to.equal('20-1/2')
+    expect(formatLength(20.5, 'in', 'in32')).to.equal('20-1/2')
+    expect(formatLength(20.5, 'in', 'in64')).to.equal('20-1/2')
+    expect(formatLength(18, 'ft')).to.equal('1.5')
+    expect(formatLength(20.5, 'ft_in')).to.equal('1\' 8-1/2"')
+  })
+  it('should format in the given unit and show the unit symbol', () => {
+    expect(formatLength(1, 'mm', undefined, true)).to.equal('25 mm')
+    expect(formatLength(1, 'cm', undefined, true)).to.equal('2.5 cm')
+    expect(formatLength(100, 'm', undefined, true)).to.equal('2.54 m')
+    expect(formatLength(20.5, 'in', 'in', true)).to.equal('20.5"')
+    expect(formatLength(20.5, 'in', 'in16', true)).to.equal('20-1/2"')
+    expect(formatLength(20.5, 'in', 'in32', true)).to.equal('20-1/2"')
+    expect(formatLength(20.5, 'in', 'in64', true)).to.equal('20-1/2"')
+    expect(formatLength(18, 'ft', undefined, true)).to.equal('1.5 ft')
+    expect(formatLength(20.5, 'ft_in', undefined, true)).to.equal('1\' 8-1/2"')
+  })
+  it('should always show units for feet & inches even when showUnits is false', () => {
+    expect(formatLength(20, 'ft_in')).to.equal('1\' 8"')
+  })
+})
