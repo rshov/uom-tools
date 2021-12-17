@@ -58,8 +58,8 @@ function reduceFraction(numerator, denominator) {
         denominator = denominator / 2;
     }
     return {
-        numerator: numerator,
-        denominator: denominator
+        numerator,
+        denominator
     };
 }
 /**

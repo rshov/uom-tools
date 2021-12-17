@@ -4,7 +4,7 @@ import convert from 'convert'
 const INVALID_FORMAT_MSG = 'Invalid format'
 
 
-type LengthUOM =
+export type LengthUOM =
   'mm' |     // Millimeters allowing decimals (i.e. 3.4)
   'cm' |     // Centimeters allowing decimals (i.e. 3.4)
   'm' |      // Meters allowing decimals (i.e. 3.4)
@@ -12,16 +12,16 @@ type LengthUOM =
   'ft'       // Feet allowing decimals (i.e. 3.4)
 
 // The formats allowed for displaying a length
-type LengthDisplayFormat =
+export type LengthDisplayFormat =
   'mm' |   // i.e. 3 mm
   'cm' |   // i.e. 3.4 cm
   'm' |    // i.e. 3.45 m
-  'in' |   // Inches shown in the chosen InchFractionFormat (i.e. 30.5" or 30-1/2")
+  'in' |   // Inches shown in the chosen InchDisplayFormat (i.e. 30.5" or 30-1/2")
   'ft' |   // Feet allowing decimals (i.e. 3.4')
-  'ft_in'  // Whole number feet with inches in InchFractionFormat (i.e. 5' 3.5" or 5' 3-1/2")
+  'ft_in'  // Whole number feet with inches in InchDisplayFormat (i.e. 5' 3.5" or 5' 3-1/2")
 
 // The formats allowed for displaying inches in either decimal or fractions
-type InchDisplayFormat =
+export type InchDisplayFormat =
   'in' |     // Inches allowing decimals (i.e. 3.25)
   'in16' |   // Inches as fraction, 16ths of an inch (i.e. 3/16 or 1/4)
   'in32' |   // Inches as fraction, 32nds of an inch (i.e. 3/32 or 1/4)
@@ -83,8 +83,8 @@ function reduceFraction (numerator: number, denominator: number) {
     denominator = denominator / 2
   }
   return {
-    numerator: numerator,
-    denominator: denominator
+    numerator,
+    denominator
   }
 }
 
@@ -263,8 +263,8 @@ export function formatLength (
   inches: number = 0,
   lengthFormat: LengthDisplayFormat = 'in',
   inchFormat: InchDisplayFormat = 'in16',
-  showUnits?: boolean) {
-
+  showUnits?: boolean
+) {
   switch (lengthFormat) {
     case 'mm':
       return formatMillimeters(inches, showUnits)

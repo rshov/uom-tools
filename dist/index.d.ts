@@ -1,15 +1,15 @@
-declare type LengthUOM = 'mm' | // Millimeters allowing decimals (i.e. 3.4)
+export declare type LengthUOM = 'mm' | // Millimeters allowing decimals (i.e. 3.4)
 'cm' | // Centimeters allowing decimals (i.e. 3.4)
 'm' | // Meters allowing decimals (i.e. 3.4)
 'in' | // Inches allowing decimals (i.e. 3.4558)
 'ft';
-declare type LengthDisplayFormat = 'mm' | // i.e. 3 mm
+export declare type LengthDisplayFormat = 'mm' | // i.e. 3 mm
 'cm' | // i.e. 3.4 cm
 'm' | // i.e. 3.45 m
-'in' | // Inches shown in the chosen InchFractionFormat (i.e. 30.5" or 30-1/2")
+'in' | // Inches shown in the chosen InchDisplayFormat (i.e. 30.5" or 30-1/2")
 'ft' | // Feet allowing decimals (i.e. 3.4')
 'ft_in';
-declare type InchDisplayFormat = 'in' | // Inches allowing decimals (i.e. 3.25)
+export declare type InchDisplayFormat = 'in' | // Inches allowing decimals (i.e. 3.25)
 'in16' | // Inches as fraction, 16ths of an inch (i.e. 3/16 or 1/4)
 'in32' | // Inches as fraction, 32nds of an inch (i.e. 3/32 or 1/4)
 'in64';
@@ -144,4 +144,3 @@ export declare function parseInches(input?: string): number;
  * @throws an error if the string cannot be parsed as a fraction
  */
 export declare function parseFraction(input?: string): number;
-export {};
