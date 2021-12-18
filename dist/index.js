@@ -264,7 +264,6 @@ function parseLength(input, targetUnit = 'in', defaultUnit) {
     }
     if (input.includes('feet') || input.includes('foot') || input.includes('ft') || input.includes('\'') || input.includes('in') || input.includes('"')) {
         const inches = parseInchesAndFeet(input, defaultUnit);
-        console.log('inches', inches);
         return (0, convert_1.default)(inches, 'in').to(targetUnit);
     }
     else if (input.includes('mm') || input.includes('millimeter')) {
@@ -360,11 +359,10 @@ exports.parseMillimeters = parseMillimeters;
 function parseInchesAndFeet(input, defaultUnit = 'in') {
     if (!input)
         return 0;
-    // Check if string is just a number with no units, and if so return that number
+    // Check if input is just a number with no units
     const num = Number(input);
     if (isNumber(num)) {
-        console.log('isNumber');
-        return defaultUnit === 'in' ? num : num / 12;
+        return defaultUnit === 'ft' ? num * 12 : num;
     }
     let str = standardizeFeetSymbol(input);
     str = replaceInchSymbolBySpace(str);
