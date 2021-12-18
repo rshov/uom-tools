@@ -315,13 +315,19 @@ function isNumber (num: number) {
  * @returns The length as a decimal number in the target units
  * @throws an error if the string format cannot be parsed
  */
-export function parseLength (input?: string, targetUnit: LengthUOM = 'in', defaultUnit: LengthUOM = 'in') {
+export function parseLength (input?: string, targetUnit: LengthUOM = 'in', defaultUnit?: LengthUOM) {
   if (!input) {
     return 0
   }
 
+  // If no default unit is specified then use the target units as default
+  if (!defaultUnit) {
+    defaultUnit = targetUnit
+  }
+
   if (input.includes('feet') || input.includes('foot') || input.includes('ft') || input.includes('\'') || input.includes('in') || input.includes('"')) {
-    return parseInchesAndFeet(input, targetUnit, defaultUnit)
+    const inches = parseInchesAndFeet(input, defaultUnit)
+    return convert(inches, 'in').to(targetUnit)
   }
   else if (input.includes('mm') || input.includes('millimeter')) {
     const mm = parseMillimeters(input)
@@ -333,7 +339,7 @@ export function parseLength (input?: string, targetUnit: LengthUOM = 'in', defau
   }
   else if (input.includes('m')) {  // This also covers 'meter' and 'meters'
     const m = parseMeters(input)
-    return convert(m, 'meters').to(targetUnit)
+    return convert(m, 'm').to(targetUnit)
   }
   else {
     // No units were specified, so try to parse as a number
@@ -396,7 +402,7 @@ export function parseMillimeters (input?: string) {
 
 
 /**
- * Parse a string containing feet and inches to return the number of inches or feet.
+ * Parse a string containing feet and/or inches to return the number of inches.
  * Feet are supported using single quotes, 'ft' or 'feet' or 'foot'.
  * Inches are supported using two single quotes, double quotes, 'in', 'inch', or 'inches'.
  * Inches may also include fractions.
@@ -415,20 +421,19 @@ export function parseMillimeters (input?: string) {
  * @returns The number of feet as a decimal number
  * @throws an error if the string format cannot be parsed
  */
-export function parseInchesAndFeet (input?: string, targetUnit: LengthUOM = 'in', defaultUnit: LengthUOM = 'in') {
+export function parseInchesAndFeet (input?: string, defaultUnit: LengthUOM = 'in') {
   if (!input) return 0
+
+  // Check if input is just a number with no units
+  const num = Number(input)
+  if (isNumber(num)) {
+    return defaultUnit === 'ft' ? num * 12 : num
+  }
 
   let str = standardizeFeetSymbol(input)
   str = replaceInchSymbolBySpace(str)
 
-  // Check if string is just a number with no units, and if so return that number
-  const num = Number(str)
-  if (isNumber(num)) {
-    return convert(num, defaultUnit).to(targetUnit)
-  }
-
-  let feet = 0, inches = 0
-
+  let feet = 0
   const indexFeetSymbol = str.indexOf('\'')
 
   // If the input contains feet then parse the feet
@@ -445,12 +450,8 @@ export function parseInchesAndFeet (input?: string, targetUnit: LengthUOM = 'in'
       : ''
   }
 
-  inches = parseInches(strInches)
-
-  // Convert result to inches or feet based on target unit
-  return targetUnit === 'ft'
-    ? feet + (inches / 12)
-    : (feet * 12) + inches
+  // Convert result to inches
+  return parseInches(strInches) + (feet * 12)
 }
 
 

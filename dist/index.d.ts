@@ -103,7 +103,7 @@ export declare function parseMeters(input?: string): number;
 export declare function parseCentimeters(input?: string): number;
 export declare function parseMillimeters(input?: string): number;
 /**
- * Parse a string containing feet and inches to return the number of inches or feet.
+ * Parse a string containing feet and/or inches to return the number of inches.
  * Feet are supported using single quotes, 'ft' or 'feet' or 'foot'.
  * Inches are supported using two single quotes, double quotes, 'in', 'inch', or 'inches'.
  * Inches may also include fractions.
@@ -122,7 +122,7 @@ export declare function parseMillimeters(input?: string): number;
  * @returns The number of feet as a decimal number
  * @throws an error if the string format cannot be parsed
  */
-export declare function parseInchesAndFeet(input?: string, targetUnit?: LengthUOM, defaultUnit?: LengthUOM): number;
+export declare function parseInchesAndFeet(input?: string, defaultUnit?: LengthUOM): number;
 /**
  * Parses a string containing feet and returns the number of feet.
  * Note that the string may also contain inches after the feet but only the feet number will be returned.

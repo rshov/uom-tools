@@ -377,12 +377,12 @@ describe('test parseLength()', () => {
   it('should parse a number with a decimal', () => {
     expect(parseLength('5.3')).to.equal(5.3)
   })
-  it('should parse a number with no units specified into the target unit using the default unit "in"', () => {
-    expect(parseLength('12', 'ft')).to.equal(1)
+  it('should parse a number with no units specified into the target unit', () => {
+    expect(parseLength('10', 'ft')).to.equal(10)
     expect(parseLength('10', 'in')).to.equal(10)
-    expect(parseLength('10', 'mm')).to.equal(254)
-    expect(parseLength('10', 'cm')).to.equal(25.4)
-    expect(parseLength('10', 'm')).to.equal(0.254)
+    expect(parseLength('10', 'mm')).to.equal(10)
+    expect(parseLength('10', 'cm')).to.equal(10)
+    expect(parseLength('10', 'm')).to.equal(10)
   })
   it('should use the default unit when no units are specified', () => {
     expect(parseLength('12', 'ft', 'in')).to.equals(1)
