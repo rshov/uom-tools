@@ -377,12 +377,19 @@ describe('test parseLength()', () => {
   it('should parse a number with a decimal', () => {
     expect(parseLength('5.3')).to.equal(5.3)
   })
-  it('should parse a number with no units specified into the target unit', () => {
-    expect(parseLength('10', 'ft')).to.equal(10)
+  it('should parse a number with no units specified into the target unit using the default unit "in"', () => {
+    expect(parseLength('12', 'ft')).to.equal(1)
     expect(parseLength('10', 'in')).to.equal(10)
-    expect(parseLength('10', 'mm')).to.equal(10)
-    expect(parseLength('10', 'cm')).to.equal(10)
-    expect(parseLength('10', 'm')).to.equal(10)
+    expect(parseLength('10', 'mm')).to.equal(254)
+    expect(parseLength('10', 'cm')).to.equal(25.4)
+    expect(parseLength('10', 'm')).to.equal(0.254)
+  })
+  it('should use the default unit when no units are specified', () => {
+    expect(parseLength('12', 'ft', 'in')).to.equals(1)
+    expect(parseLength('1', 'in', 'ft')).to.equals(12)
+    expect(parseLength('254', 'in', 'mm')).to.equals(10)
+    expect(parseLength('100', 'cm', 'mm')).to.equals(10)
+    expect(parseLength('100', 'm', 'cm')).to.equals(1)
   })
   it('should parse meters', () => {
     expect(parseLength('5 m', 'm')).to.equal(5)
@@ -400,7 +407,7 @@ describe('test parseLength()', () => {
     expect(parseLength('5 millimeters', 'mm')).to.equal(5)
   })
   it('should parse feet', () => {
-    expect(parseLength('5 \'', 'ft')).to.equal(5)
+    expect(parseLength('5\'', 'ft')).to.equal(5)
     expect(parseLength('5 ft', 'ft')).to.equal(5)
     expect(parseLength('5 feet', 'ft')).to.equal(5)
     expect(parseLength('5 foot', 'ft')).to.equal(5)

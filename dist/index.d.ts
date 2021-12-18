@@ -90,15 +90,20 @@ export declare function formatFeetDecimal(feet?: number, showUnits?: boolean): s
 /**
  * Parses a string and returns a length in the target units, or inches if not specified.
  * Supports parsing lengths in millimeters, centimeters, meters, feet and inches (fractional or decimal).
+ * @param input The input string to parse
+ * @param targetUnit The units in which to return the input value; i.e. 'in' will return a value in inches
+ * @param defaultUnit The units to use if no units are specified in the input string;
+ *                    for example, the input "5" does not specify the units, defaultUnits of 'mm' would
+ *                    assume the input is 5 millimeters, which would then be converted to the targetUnit
  * @returns The length as a decimal number in the target units
  * @throws an error if the string format cannot be parsed
  */
-export declare function parseLength(input?: string, targetUnit?: LengthUOM): number;
+export declare function parseLength(input?: string, targetUnit?: LengthUOM, defaultUnit?: LengthUOM): number;
 export declare function parseMeters(input?: string): number;
 export declare function parseCentimeters(input?: string): number;
 export declare function parseMillimeters(input?: string): number;
 /**
- * Parse a string containing feet and inches to return the number of inches.
+ * Parse a string containing feet and inches to return the number of inches or feet.
  * Feet are supported using single quotes, 'ft' or 'feet' or 'foot'.
  * Inches are supported using two single quotes, double quotes, 'in', 'inch', or 'inches'.
  * Inches may also include fractions.
@@ -117,7 +122,7 @@ export declare function parseMillimeters(input?: string): number;
  * @returns The number of feet as a decimal number
  * @throws an error if the string format cannot be parsed
  */
-export declare function parseInchesAndFeet(input?: string, targetUnit?: LengthUOM): number;
+export declare function parseInchesAndFeet(input?: string, targetUnit?: LengthUOM, defaultUnit?: LengthUOM): number;
 /**
  * Parses a string containing feet and returns the number of feet.
  * Note that the string may also contain inches after the feet but only the feet number will be returned.

@@ -307,17 +307,21 @@ function isNumber (num: number) {
 /**
  * Parses a string and returns a length in the target units, or inches if not specified.
  * Supports parsing lengths in millimeters, centimeters, meters, feet and inches (fractional or decimal).
+ * @param input The input string to parse
+ * @param targetUnit The units in which to return the input value; i.e. 'in' will return a value in inches
+ * @param defaultUnit The units to use if no units are specified in the input string;
+ *                    for example, the input "5" does not specify the units, defaultUnits of 'mm' would
+ *                    assume the input is 5 millimeters, which would then be converted to the targetUnit
  * @returns The length as a decimal number in the target units
  * @throws an error if the string format cannot be parsed
  */
-export function parseLength (input?: string, targetUnit: LengthUOM = 'in') {
+export function parseLength (input?: string, targetUnit: LengthUOM = 'in', defaultUnit: LengthUOM = 'in') {
   if (!input) {
     return 0
   }
 
   if (input.includes('feet') || input.includes('foot') || input.includes('ft') || input.includes('\'') || input.includes('in') || input.includes('"')) {
-    const inches = parseInchesAndFeet(input, targetUnit)
-    return convert(inches, 'inches').to(targetUnit)
+    return parseInchesAndFeet(input, targetUnit, defaultUnit)
   }
   else if (input.includes('mm') || input.includes('millimeter')) {
     const mm = parseMillimeters(input)
@@ -333,9 +337,12 @@ export function parseLength (input?: string, targetUnit: LengthUOM = 'in') {
   }
   else {
     // No units were specified, so try to parse as a number
-    const num = Number(input.trim())
+    const num = Number(input)
     if (isNumber(num)) {
-      return num
+      if (defaultUnit === 'ft' && targetUnit === 'in') {
+        return num * 12  // Workaround for floating point problem with convert library
+      }
+      return convert(num, defaultUnit).to(targetUnit)
     }
   }
 
@@ -389,7 +396,7 @@ export function parseMillimeters (input?: string) {
 
 
 /**
- * Parse a string containing feet and inches to return the number of inches.
+ * Parse a string containing feet and inches to return the number of inches or feet.
  * Feet are supported using single quotes, 'ft' or 'feet' or 'foot'.
  * Inches are supported using two single quotes, double quotes, 'in', 'inch', or 'inches'.
  * Inches may also include fractions.
@@ -408,11 +415,17 @@ export function parseMillimeters (input?: string) {
  * @returns The number of feet as a decimal number
  * @throws an error if the string format cannot be parsed
  */
-export function parseInchesAndFeet (input?: string, targetUnit: LengthUOM = 'in') {
+export function parseInchesAndFeet (input?: string, targetUnit: LengthUOM = 'in', defaultUnit: LengthUOM = 'in') {
   if (!input) return 0
 
   let str = standardizeFeetSymbol(input)
   str = replaceInchSymbolBySpace(str)
+
+  // Check if string is just a number with no units, and if so return that number
+  const num = Number(str)
+  if (isNumber(num)) {
+    return convert(num, defaultUnit).to(targetUnit)
+  }
 
   let feet = 0, inches = 0
 
@@ -434,8 +447,10 @@ export function parseInchesAndFeet (input?: string, targetUnit: LengthUOM = 'in'
 
   inches = parseInches(strInches)
 
-  // Convert result to inches
-  return (feet * 12) + inches
+  // Convert result to inches or feet based on target unit
+  return targetUnit === 'ft'
+    ? feet + (inches / 12)
+    : (feet * 12) + inches
 }
 
 
