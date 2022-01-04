@@ -90,12 +90,16 @@ function reduceFraction (numerator: number, denominator: number) {
 
 /**
  * Formats a number of inches for display as whole feet, ignoring any amount beyond the last whole foot.
- * @param {Number} inches The number of inches to format
+ * @param {Number} length The number of inches to format
+ * @param {LengthUOM} uom The units of the given length
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string with the number of feet
  */
-export function formatWholeFeet (inches: number, showUnits?: boolean) {
-  const feet = Math.floor(inches / 12)
+export function formatWholeFeet (length: number, uom: LengthUOM = 'ft', showUnits?: boolean) {
+  const ft = uom === 'ft'
+    ? length
+    : convert(length, uom).to('ft')
+  const feet = Math.floor(ft)
   const units = showUnits ? '\'' : ''
   return numeral(feet).format('0,0') + units
 }
@@ -104,15 +108,21 @@ export function formatWholeFeet (inches: number, showUnits?: boolean) {
  * Formats the number of inches to be displayed as a fractional value.
  * For example, 3.25 would become "3 - 1/4".
  * @param {Number} inches The decimal inches to format
+ * @param {LengthUOM} uom The units of the given length
  * @param {String} inchFormat How to display inches
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string with the fractional inches.
  */
 export function formatFractionalInches (
-  inches: number,
+  length: number,
+  uom: LengthUOM = 'in',
   inchFormat: InchDisplayFormat = 'in16',
   showUnits?: boolean,
 ) {
+  const inches = uom === 'in'
+    ? length
+    : convert(length, uom).to('in')
+
   const units = showUnits ? '"' : ''
 
   // If it's a whole number then there's no fraction to show
@@ -149,11 +159,15 @@ export function formatFractionalInches (
  * Formats a length for display in feet and fractional inches.
  * If there are no inches to display then units are "ft", otherwise uses single quote.
  * For example: 3' 4-1/8"  -or-  4 ft
- * @param {Number} inches The length in inches to format
+ * @param {Number} length The length to format
+ * @param {LengthUOM} uom The units of the given length
  * @param {String} inchDisplay How to display inches
  * @returns {String} A formatted string with the number of inches
  */
-export function formatFeetAndFractionalInches (totalInches: number, inchDisplay: InchDisplayFormat = 'in16') {
+export function formatFeetAndFractionalInches (length: number, uom: LengthUOM = 'in', inchDisplay: InchDisplayFormat = 'in16') {
+  const totalInches = uom === 'in'
+    ? length
+    : convert(length, uom).to('in')
 
   // Count how many whole feet there are
   const wholeFeet = Math.floor(totalInches / 12)
@@ -163,12 +177,12 @@ export function formatFeetAndFractionalInches (totalInches: number, inchDisplay:
 
   // If there are no remaining inches, then just return the feet, ie: "3 ft"
   if (inches < 0.0001) {
-    return formatWholeFeet(totalInches) + ' ft'
+    return formatWholeFeet(wholeFeet, 'ft') + ' ft'
   }
 
   // Otherwise return the fractional inches, along with the feet if any
-  const feetStr = wholeFeet ? formatWholeFeet(totalInches, true) : ''
-  const inchesStr = formatFractionalInches(inches, inchDisplay, true)
+  const feetStr = wholeFeet ? formatWholeFeet(wholeFeet, 'ft', true) : ''
+  const inchesStr = formatFractionalInches(inches, 'in', inchDisplay, true)
   return feetStr ? `${feetStr} ${inchesStr}` : inchesStr
 }
 
@@ -177,10 +191,14 @@ export function formatFeetAndFractionalInches (totalInches: number, inchDisplay:
  * Formats a length for display in feet and decimal inches.
  * If there are no inches to display then units are "ft", otherwise uses single quote.
  * For example: 3' 4.125"  -or-  4 ft
- * @param {Number} inches The length in inches to format
+ * @param {Number} length The length to format
+ * @param {LengthUOM} uom The units of the given length
  * @returns {String} A formatted string with the number of inches
  */
-export function formatFeetAndDecimalInches (totalInches: number) {
+export function formatFeetAndDecimalInches (length: number, uom: LengthUOM = 'in') {
+  const totalInches = uom === 'in'
+    ? length
+    : convert(length, uom).to('in')
 
   // Count how many whole feet there are
   const wholeFeet = Math.floor(totalInches / 12)
@@ -190,23 +208,27 @@ export function formatFeetAndDecimalInches (totalInches: number) {
 
   // If there are no remaining inches, then just return the feet, ie: 4 ft
   if (inches < 0.0001) {
-    return formatWholeFeet(totalInches) + ' ft'
+    return formatWholeFeet(wholeFeet, 'ft') + ' ft'
   }
 
   // Otherwise return the decimal inches, along with the feet if any
-  const feetStr = wholeFeet ? formatWholeFeet(totalInches, true) : undefined
-  const inchesStr = formatDecimalInches(inches, true)
+  const feetStr = wholeFeet ? formatWholeFeet(wholeFeet, 'ft', true) : undefined
+  const inchesStr = formatDecimalInches(inches, 'in', true)
   return feetStr ? `${feetStr} ${inchesStr}` : inchesStr
 }
 
 
 /**
  * Formats a length for display in inches, allowing up to 4 decimal places.
- * @param {Number} inches The number of inches to format
+ * @param {Number} length The length to format
+ * @param {LengthUOM} uom The units of the given length
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string with the number of inches
  */
-export function formatDecimalInches (inches: number, showUnits?: boolean) {
+export function formatDecimalInches (length: number, uom: LengthUOM = 'in', showUnits?: boolean) {
+  const inches = uom === 'in'
+    ? length
+    : convert(length, uom).to('in')
   const units = showUnits ? '"' : ''
   return numeral(inches).format('0,0.[0000]') + units
 }
@@ -214,74 +236,85 @@ export function formatDecimalInches (inches: number, showUnits?: boolean) {
 
 /**
  * Formats a length for display in millimeters.
- * @param {Number} inches The number of inches to display in millimeters
+ * @param {Number} inches The length to display in millimeters
+ * @param {LengthUOM} uom The units of the given length
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string with the number of millimeters
  */
-export function formatMillimeters (inches: number, showUnits?: boolean) {
-  const mm = inches * 25.4
-  const units = showUnits ? ' mm' : ''
-  return numeral(mm).format('0,0') + units
+export function formatMillimeters (length: number, uom: LengthUOM = 'mm', showUnits?: boolean) {
+  const mm = uom === 'mm'
+    ? length
+    : convert(length, uom).to('mm')
+  const unitStr = showUnits ? ' mm' : ''
+  return numeral(mm).format('0,0') + unitStr
 }
 
 
 /**
  * Formats a length for display in centimeters, allowing up to 1 decimal place.
- * @param {Number} inches The number of inches to display in centimeters
+ * @param {Number} inches The length to display in centimeters
+ * @param {LengthUOM} uom The units of the given length
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string with the number of centimeters
  */
-export function formatCentimeters (inches: number, showUnits?: boolean) {
-  const cm = inches * 2.54
-  const units = showUnits ? ' cm' : ''
-  return numeral(cm).format('0,0.[0]') + units
+export function formatCentimeters (length: number, uom: LengthUOM = 'cm', showUnits?: boolean) {
+  const cm = uom === 'cm'
+    ? length
+    : convert(length, uom).to('cm')
+  const unitStr = showUnits ? ' cm' : ''
+  return numeral(cm).format('0,0.[0]') + unitStr
 }
 
 
 /**
  * Formats a length for display in meters, allowing up to 2 decimal places.
- * @param {Number} inches The number of inches to display in meters
+ * @param {Number} inches The length to display in meters
+ * @param {LengthUOM} uom The units of the given length
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string with the number of meters
  */
-export function formatMeters (inches: number, showUnits?: boolean) {
-  const m = inches * 0.0254
-  const units = showUnits ? ' m' : ''
-  return numeral(m).format('0,0.[00]') + units
+export function formatMeters (length: number, uom: LengthUOM = 'm', showUnits?: boolean) {
+  const m = uom === 'm'
+    ? length
+    : convert(length, uom).to('m')
+  const unitStr = showUnits ? ' m' : ''
+  return numeral(m).format('0,0.[00]') + unitStr
 }
 
 
 /**
- * Formats a length for display in the given unit of measure.
- * @param {Number} inches The number of inches to be formatted
- * @param {String} lengthFormat The units to display, enums.LengthUOM
+ * Formats a length for display in the display format and units.
+ * @param {Number} length The length to be formatted
+ * @param {LengthUOM} uom The unit of measure for the given length
+ * @param {LengthDisplayFormat} displayFormat The units to display, enums.LengthUOM
+ * @param {InchDisplayFormat} inchFormat The display format for inches, if applicable
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
- * @param {Boolean} allowFeet (n/a for metric units); true to show feet and inches, false for only inches
  * @returns {String} A formatted string in the given unit of measure
  */
 export function formatLength (
-  inches: number = 0,
-  lengthFormat: LengthDisplayFormat = 'in',
+  length: number = 0,
+  uom: LengthUOM = 'in',
+  displayFormat: LengthDisplayFormat = 'in',
   inchFormat: InchDisplayFormat = 'in16',
-  showUnits?: boolean
+  showUnits?: boolean,
 ) {
-  switch (lengthFormat) {
+  switch (displayFormat) {
     case 'mm':
-      return formatMillimeters(inches, showUnits)
+      return formatMillimeters(length, uom, showUnits)
     case 'cm':
-      return formatCentimeters(inches, showUnits)
+      return formatCentimeters(length, uom, showUnits)
     case 'm':
-      return formatMeters(inches, showUnits)
+      return formatMeters(length, uom, showUnits)
     case 'ft':
-      return formatFeetDecimal(inches / 12, showUnits)
+      return formatFeetDecimal(length, uom, showUnits)
     case 'ft_in':
       return inchFormat === 'in'
-        ? formatFeetAndDecimalInches(inches)
-        : formatFeetAndFractionalInches(inches, inchFormat)
+        ? formatFeetAndDecimalInches(length, uom)
+        : formatFeetAndFractionalInches(length, uom, inchFormat)
     default: // Inches 'in'
       return inchFormat === 'in'
-        ? formatDecimalInches(inches, showUnits)
-        : formatFractionalInches(inches, inchFormat, showUnits)
+        ? formatDecimalInches(length, uom, showUnits)
+        : formatFractionalInches(length, uom, inchFormat, showUnits)
   }
 }
 
@@ -289,8 +322,10 @@ export function formatLength (
 /**
  * Formats a number of feet for display with 2 decimal places and the units 'ft'.
  */
-export function formatFeetDecimal (feet?: number, showUnits?: boolean) {
-  const ft = feet || 0
+export function formatFeetDecimal (length: number, uom: LengthUOM = 'ft', showUnits?: boolean) {
+  const ft = uom === 'ft'
+    ? length
+    : convert(length, uom).to('ft')
   const units = showUnits ? ' ft' : ''
   return numeral(ft).format('0,0.[00]') + units
 }
