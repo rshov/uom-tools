@@ -312,7 +312,7 @@ function parseLength(input, targetUnit = 'in', defaultUnit) {
     }
     else {
         // No units were specified, so try to parse as a number
-        const num = Number(input);
+        const num = Number(input.replaceAll(',', '').trim());
         if (isNumber(num)) {
             if (defaultUnit === 'ft' && targetUnit === 'in') {
                 return num * 12; // Workaround for floating point problem with convert library
@@ -330,6 +330,7 @@ function parseMeters(input) {
         .replaceAll('meters', '')
         .replaceAll('meter', '')
         .replaceAll('m', '')
+        .replaceAll(',', '')
         .trim();
     const num = Number(str);
     if (isNumber(num)) {
@@ -345,6 +346,7 @@ function parseCentimeters(input) {
         .replaceAll('centimeters', '')
         .replaceAll('centimeter', '')
         .replaceAll('cm', '')
+        .replaceAll(',', '')
         .trim();
     const num = Number(str);
     if (isNumber(num)) {
@@ -360,6 +362,7 @@ function parseMillimeters(input) {
         .replaceAll('millimeters', '')
         .replaceAll('millimeter', '')
         .replaceAll('mm', '')
+        .replaceAll(',', '')
         .trim();
     const num = Number(str);
     if (isNumber(num)) {
@@ -391,6 +394,8 @@ exports.parseMillimeters = parseMillimeters;
 function parseInchesAndFeet(input, defaultUnit = 'in') {
     if (!input)
         return 0;
+    // Strip out any comma separators
+    input = input.replaceAll(',', '');
     // Check if input is just a number with no units
     const num = Number(input);
     if (isNumber(num)) {
@@ -423,7 +428,8 @@ exports.parseInchesAndFeet = parseInchesAndFeet;
 function parseFeet(input) {
     if (!input)
         return 0;
-    let str = standardizeFeetSymbol(input);
+    let str = standardizeFeetSymbol(input)
+        .replaceAll(',', '');
     // Take only the substring up until a single quote
     const index = str.indexOf('\'');
     if (index !== -1) {
@@ -456,7 +462,8 @@ exports.parseFeet = parseFeet;
 function parseInches(input) {
     if (!input)
         return 0;
-    let str = standardizeFeetSymbol(input);
+    let str = standardizeFeetSymbol(input)
+        .replaceAll(',', '');
     // If feet are included in input then strip it out to leave just the inches
     const indexFt = str.indexOf('\'');
     if (indexFt !== -1 && indexFt < str.length) {
@@ -490,7 +497,8 @@ exports.parseInches = parseInches;
 function parseFraction(input) {
     if (!input)
         return 0;
-    let str = replaceInchSymbolBySpace(input);
+    let str = replaceInchSymbolBySpace(input)
+        .replaceAll(',', '');
     if (!str.includes('/')) {
         throw new Error(INVALID_FORMAT_MSG);
     }

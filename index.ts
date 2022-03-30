@@ -378,7 +378,7 @@ export function parseLength (input?: string, targetUnit: LengthUOM = 'in', defau
   }
   else {
     // No units were specified, so try to parse as a number
-    const num = Number(input)
+    const num = Number(input.replaceAll(',', '').trim())
     if (isNumber(num)) {
       if (defaultUnit === 'ft' && targetUnit === 'in') {
         return num * 12  // Workaround for floating point problem with convert library
@@ -397,6 +397,7 @@ export function parseMeters (input?: string) {
     .replaceAll('meters', '')
     .replaceAll('meter', '')
     .replaceAll('m', '')
+    .replaceAll(',', '')
     .trim()
   const num = Number(str)
   if (isNumber(num)) {
@@ -412,6 +413,7 @@ export function parseCentimeters (input?: string) {
     .replaceAll('centimeters', '')
     .replaceAll('centimeter', '')
     .replaceAll('cm', '')
+    .replaceAll(',', '')
     .trim()
   const num = Number(str)
   if (isNumber(num)) {
@@ -427,6 +429,7 @@ export function parseMillimeters (input?: string) {
     .replaceAll('millimeters', '')
     .replaceAll('millimeter', '')
     .replaceAll('mm', '')
+    .replaceAll(',', '')
     .trim()
   const num = Number(str)
   if (isNumber(num)) {
@@ -458,6 +461,9 @@ export function parseMillimeters (input?: string) {
  */
 export function parseInchesAndFeet (input?: string, defaultUnit: LengthUOM = 'in') {
   if (!input) return 0
+
+  // Strip out any comma separators
+  input = input.replaceAll(',', '')
 
   // Check if input is just a number with no units
   const num = Number(input)
@@ -498,6 +504,7 @@ export function parseFeet (input?: string) {
   if (!input) return 0
 
   let str = standardizeFeetSymbol(input)
+    .replaceAll(',', '')
 
   // Take only the substring up until a single quote
   const index = str.indexOf('\'')
@@ -535,6 +542,7 @@ export function parseInches (input?: string) {
   if (!input) return 0
 
   let str = standardizeFeetSymbol(input)
+    .replaceAll(',', '')
 
   // If feet are included in input then strip it out to leave just the inches
   const indexFt = str.indexOf('\'')
@@ -575,6 +583,7 @@ export function parseFraction (input?: string) {
   if (!input) return 0
 
   let str = replaceInchSymbolBySpace(input)
+    .replaceAll(',', '')
 
   if (!str.includes('/')) {
     throw new Error(INVALID_FORMAT_MSG)

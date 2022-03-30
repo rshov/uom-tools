@@ -48,6 +48,10 @@ describe('test parseFraction()', () => {
     const result = parseFraction(' 1/4 "')
     expect(result).to.equal(0.25)
   })
+  it('should parse a number with comma separators', () => {
+    const result = parseFraction('1,000/1')
+    expect(result).to.equal(1000)
+  })
 })
 
 
@@ -69,6 +73,10 @@ describe('test parseInches()', () => {
   })
   it('should parse a large number', () => {
     const result = parseInches('1000')
+    expect(result).to.equal(1000)
+  })
+  it('should parse a number with comma separators', () => {
+    const result = parseInches('1,000')
     expect(result).to.equal(1000)
   })
   it('should parse a string with a number and double quote', () => {
@@ -217,6 +225,10 @@ describe('test parseFeet()', () => {
   it('should throw an error when there are inches but no feet', () => {
     expect(() => parseFeet('10"')).to.throw()
   })
+  it('should parse a number with comma separators', () => {
+    const result = parseFeet('1,000')
+    expect(result).to.equal(1000)
+  })
 })
 
 
@@ -263,6 +275,10 @@ describe('test parseMillimeters()', () => {
   it('should parse a number with "millimeters" after a space', () => {
     const result = parseMillimeters('5 millimeters')
     expect(result).to.equal(5)
+  })
+  it('should parse a number with comma separators', () => {
+    const result = parseMillimeters('1,000')
+    expect(result).to.equal(1000)
   })
 })
 
@@ -311,6 +327,10 @@ describe('test parseCentimeters()', () => {
     const result = parseCentimeters('5 centimeters')
     expect(result).to.equal(5)
   })
+  it('should parse a number with comma separators', () => {
+    const result = parseCentimeters('1,000')
+    expect(result).to.equal(1000)
+  })
 })
 
 
@@ -358,6 +378,10 @@ describe('test parseMeters()', () => {
     const result = parseMeters('5 meters')
     expect(result).to.equal(5)
   })
+  it('should parse a number with comma separators', () => {
+    const result = parseMeters('1,000')
+    expect(result).to.equal(1000)
+  })
 })
 
 
@@ -376,6 +400,9 @@ describe('test parseLength()', () => {
   })
   it('should parse a number with a decimal', () => {
     expect(parseLength('5.3')).to.equal(5.3)
+  })
+  it('should parse a number with comma separators', () => {
+    expect(parseLength('1,000')).to.equal(1000)
   })
   it('should parse a number with no units specified into the target unit', () => {
     expect(parseLength('10', 'ft')).to.equal(10)
