@@ -102,7 +102,7 @@ describe('test formatFeetAndDecimalInches()', () => {
     expect(formatFeetAndDecimalInches(6)).to.equal('6"')
     expect(formatFeetAndDecimalInches(6, 'in')).to.equal('6"')
     expect(formatFeetAndDecimalInches(6, 'ft')).to.equal('6 ft')
-    expect(formatFeetAndDecimalInches(6, 'm')).to.equal('19\' 8.2205"')
+    expect(formatFeetAndDecimalInches(6, 'm')).to.equal('19\' 8.22"')
   })
   it('should format as only inches when there are no feet', () => {
     expect(formatFeetAndDecimalInches(0.25)).to.equal('0.25"')
@@ -125,7 +125,7 @@ describe('test formatDecimalInches()', () => {
   })
   it('should convert from the given units', () => {
     expect(formatDecimalInches(2, 'ft')).to.equal('24')
-    expect(formatDecimalInches(10, 'cm')).to.equal('3.937')
+    expect(formatDecimalInches(10, 'cm')).to.equal('3.94')
   })
   it('should format whole number', () => {
     expect(formatDecimalInches(5)).to.equal('5')
@@ -139,8 +139,8 @@ describe('test formatDecimalInches()', () => {
   it('should format 2 decimal places', () => {
     expect(formatDecimalInches(0.25)).to.equal('0.25')
   })
-  it('should format to max 4 decimal places', () => {
-    expect(formatDecimalInches(0.25678)).to.equal('0.2568')
+  it('should format to max 2 decimal places', () => {
+    expect(formatDecimalInches(0.25678)).to.equal('0.26')
   })
   it('should format with units "', () => {
     expect(formatDecimalInches(5, 'in', true)).to.equal('5"')

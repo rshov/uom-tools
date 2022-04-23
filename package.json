@@ -1,6 +1,6 @@
 {
   "name": "uom-tools",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Tools to parse and format amounts in different units of measure.",
   "main": "dist/index.js",
   "scripts": {
