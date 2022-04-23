@@ -180,7 +180,7 @@ function formatDecimalInches(length, uom = 'in', showUnits) {
         ? length
         : (0, convert_1.default)(length, uom).to('in');
     const units = showUnits ? '"' : '';
-    return numeral(inches).format('0,0.[0000]') + units;
+    return numeral(inches).format('0,0.[00]') + units;
 }
 exports.formatDecimalInches = formatDecimalInches;
 /**

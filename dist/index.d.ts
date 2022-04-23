@@ -1,7 +1,7 @@
 export declare type LengthUOM = 'mm' | // Millimeters allowing decimals (i.e. 3.4)
 'cm' | // Centimeters allowing decimals (i.e. 3.4)
 'm' | // Meters allowing decimals (i.e. 3.4)
-'in' | // Inches allowing decimals (i.e. 3.4558)
+'in' | // Inches allowing decimals (i.e. 3.45)
 'ft';
 export declare type LengthDisplayFormat = 'mm' | // i.e. 3 mm
 'cm' | // i.e. 3.4 cm
