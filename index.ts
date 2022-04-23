@@ -8,7 +8,7 @@ export type LengthUOM =
   'mm' |     // Millimeters allowing decimals (i.e. 3.4)
   'cm' |     // Centimeters allowing decimals (i.e. 3.4)
   'm' |      // Meters allowing decimals (i.e. 3.4)
-  'in' |     // Inches allowing decimals (i.e. 3.4558)
+  'in' |     // Inches allowing decimals (i.e. 3.45)
   'ft'       // Feet allowing decimals (i.e. 3.4)
 
 // The formats allowed for displaying a length
@@ -230,7 +230,7 @@ export function formatDecimalInches (length: number, uom: LengthUOM = 'in', show
     ? length
     : convert(length, uom).to('in')
   const units = showUnits ? '"' : ''
-  return numeral(inches).format('0,0.[0000]') + units
+  return numeral(inches).format('0,0.[00]') + units
 }
 
 
