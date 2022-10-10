@@ -90,6 +90,18 @@ describe('test formatFeetAndFractionalInches()', () => {
     expect(formatFeetAndFractionalInches(38.5, 'in', 'in32')).to.equal('3\' 2-1/2"')
     expect(formatFeetAndFractionalInches(38.5, 'in', 'in64')).to.equal('3\' 2-1/2"')
   })
+  it('should format as only feet if inches round to 0" or 12"', () => {
+    expect(formatFeetAndFractionalInches(59.99999, 'in', 'in')).to.equal('5 ft')
+    expect(formatFeetAndFractionalInches(59.99999, 'in', 'in16')).to.equal('5 ft')
+    expect(formatFeetAndFractionalInches(59.99999, 'in', 'in32')).to.equal('5 ft')
+    expect(formatFeetAndFractionalInches(59.99999, 'in', 'in64')).to.equal('5 ft')
+    expect(formatFeetAndFractionalInches(60.00001, 'in', 'in')).to.equal('5 ft')
+    expect(formatFeetAndFractionalInches(60.00001, 'in', 'in16')).to.equal('5 ft')
+    expect(formatFeetAndFractionalInches(60.00001, 'in', 'in32')).to.equal('5 ft')
+    expect(formatFeetAndFractionalInches(60.00001, 'in', 'in64')).to.equal('5 ft')
+    expect(formatFeetAndFractionalInches(59.9, 'in', 'in')).to.equal('4\' 11"')
+    expect(formatFeetAndFractionalInches(60.1, 'in', 'in')).to.equal('5 ft')
+  })
 })
 
 

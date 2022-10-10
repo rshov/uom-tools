@@ -17,10 +17,10 @@ export declare type InchDisplayFormat = 'in' | // Inches allowing decimals (i.e.
  * Formats a number of inches for display as whole feet, ignoring any amount beyond the last whole foot.
  * @param {Number} length The number of inches to format
  * @param {LengthUOM} uom The units of the given length
- * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
+ * @param {Boolean | String} units Whether to include the unit of measure in the formatted string, or the units string to use
  * @returns {String} A formatted string with the number of feet
  */
-export declare function formatWholeFeet(length: number, uom?: LengthUOM, showUnits?: boolean): string;
+export declare function formatWholeFeet(length: number, uom?: LengthUOM, units?: boolean | string): string;
 /**
  * Formats the number of inches to be displayed as a fractional value.
  * For example, 3.25 would become "3 - 1/4".

@@ -4,6 +4,7 @@ exports.parseFraction = exports.parseInches = exports.parseFeet = exports.parseI
 const numeral = require('numeral');
 const convert_1 = require("convert");
 const INVALID_FORMAT_MSG = 'Invalid format';
+const MARGIN_OF_ERROR = 0.0001;
 /**
  * Gets the numerator for a fraction based on the given number and units to display.
  * If the given number is a whole number, then 0 is returned.
@@ -66,16 +67,19 @@ function reduceFraction(numerator, denominator) {
  * Formats a number of inches for display as whole feet, ignoring any amount beyond the last whole foot.
  * @param {Number} length The number of inches to format
  * @param {LengthUOM} uom The units of the given length
- * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
+ * @param {Boolean | String} units Whether to include the unit of measure in the formatted string, or the units string to use
  * @returns {String} A formatted string with the number of feet
  */
-function formatWholeFeet(length, uom = 'ft', showUnits) {
+function formatWholeFeet(length, uom = 'ft', units) {
     const ft = uom === 'ft'
         ? length
         : (0, convert_1.default)(length, uom).to('ft');
     const feet = Math.floor(ft);
-    const units = showUnits ? '\'' : '';
-    return numeral(feet).format('0,0') + units;
+    const unitStr = units === true ? "'"
+        : units === false ? ''
+            : units === 'ft' ? ' ft'
+                : units || '';
+    return numeral(feet).format('0,0') + unitStr;
 }
 exports.formatWholeFeet = formatWholeFeet;
 /**
@@ -132,13 +136,17 @@ function formatFeetAndFractionalInches(length, uom = 'in', inchDisplay = 'in16')
     const wholeFeet = Math.floor(totalInches / 12);
     // Get the remaining length in inches (should be less than a foot, could be zero)
     const inches = totalInches - (wholeFeet * 12);
+    const inchesStr = formatFractionalInches(inches, 'in', inchDisplay, true);
     // If there are no remaining inches, then just return the feet, ie: "3 ft"
-    if (inches < 0.0001) {
-        return formatWholeFeet(wholeFeet, 'ft') + ' ft';
+    // Or if the remaining inches round to 12", then return just the feet plus one , ie: "4 ft"
+    if (inches < 0.0001 || inchesStr === '0"') {
+        return formatWholeFeet(wholeFeet, 'ft', 'ft');
+    }
+    else if (inches > 12 - MARGIN_OF_ERROR || inchesStr === '12"') {
+        return formatWholeFeet(wholeFeet + 1, 'ft', 'ft');
     }
     // Otherwise return the fractional inches, along with the feet if any
     const feetStr = wholeFeet ? formatWholeFeet(wholeFeet, 'ft', true) : '';
-    const inchesStr = formatFractionalInches(inches, 'in', inchDisplay, true);
     return feetStr ? `${feetStr} ${inchesStr}` : inchesStr;
 }
 exports.formatFeetAndFractionalInches = formatFeetAndFractionalInches;
@@ -158,13 +166,17 @@ function formatFeetAndDecimalInches(length, uom = 'in') {
     const wholeFeet = Math.floor(totalInches / 12);
     // Get the remaining length in inches (should be less than a foot, could be zero)
     const inches = totalInches - (wholeFeet * 12);
-    // If there are no remaining inches, then just return the feet, ie: 4 ft
-    if (inches < 0.0001) {
-        return formatWholeFeet(wholeFeet, 'ft') + ' ft';
+    const inchesStr = formatDecimalInches(inches, 'in', true);
+    // If there are no remaining inches, then just return the feet, ie: "3 ft"
+    // Or if the remaining inches round to 12", then return just the feet plus one , ie: "4 ft"
+    if (inches < 0.0001 || inchesStr === '0"') {
+        return formatWholeFeet(wholeFeet, 'ft', 'ft');
+    }
+    else if (inches > 12 - MARGIN_OF_ERROR || inchesStr === '12"') {
+        return formatWholeFeet(wholeFeet + 1, 'ft', 'ft');
     }
     // Otherwise return the decimal inches, along with the feet if any
     const feetStr = wholeFeet ? formatWholeFeet(wholeFeet, 'ft', true) : undefined;
-    const inchesStr = formatDecimalInches(inches, 'in', true);
     return feetStr ? `${feetStr} ${inchesStr}` : inchesStr;
 }
 exports.formatFeetAndDecimalInches = formatFeetAndDecimalInches;
