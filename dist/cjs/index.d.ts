@@ -2,6 +2,10 @@ export type LengthUOM = "mm" | "cm" | "m" | "in" | "ft";
 export type LengthDisplayFormat = "mm" | "cm" | "m" | "in" | "ft" | "ft_in";
 export type InchDisplayFormat = "in" | "in16" | "in32" | "in64";
 export type VolumeUnitOfMeasure = "mL" | "oz";
+export declare const LengthUOMs: LengthUOM[];
+export declare const LengthDisplayFormats: LengthDisplayFormat[];
+export declare const InchDisplayFormats: InchDisplayFormat[];
+export declare const VolumeUnitOfMeasures: VolumeUnitOfMeasure[];
 /**
  * Formats a number of inches for display as whole feet, ignoring any amount beyond the last whole foot.
  * @param {Number} length The number of inches to format

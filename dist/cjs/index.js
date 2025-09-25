@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.VolumeUnitOfMeasures = exports.InchDisplayFormats = exports.LengthDisplayFormats = exports.LengthUOMs = void 0;
 exports.formatWholeFeet = formatWholeFeet;
 exports.formatFractionalInches = formatFractionalInches;
 exports.formatFeetAndFractionalInches = formatFeetAndFractionalInches;
@@ -27,6 +28,10 @@ const numeral_1 = __importDefault(require("numeral"));
 const convert_1 = require("convert");
 const INVALID_FORMAT_MSG = "Invalid format";
 const MARGIN_OF_ERROR = 0.0001;
+exports.LengthUOMs = ["mm", "cm", "m", "in", "ft"];
+exports.LengthDisplayFormats = ["mm", "cm", "m", "in", "ft", "ft_in"];
+exports.InchDisplayFormats = ["in", "in16", "in32", "in64"];
+exports.VolumeUnitOfMeasures = ["mL", "oz"];
 /**
  * Gets the numerator for a fraction based on the given number and units to display.
  * If the given number is a whole number, then 0 is returned.
