@@ -475,33 +475,33 @@ describe("test parseVolume()", () => {
     expect(parseVolume("0", "mL")).to.equal(0);
   });
   it("should parse oz values correctly", () => {
-    expect(parseVolume("1", "oz")).to.equal(0.03381413);
-    expect(parseVolume("10", "oz")).to.equal(0.3381413);
+    expect(parseVolume("1", "oz")).to.equal(29.573435720510926);
+    expect(parseVolume("10", "oz")).to.equal(295.73435720510923);
     expect(parseVolume("0", "oz")).to.equal(0);
   });
   it("should handle decimal values", () => {
     expect(parseVolume("1.5", "mL")).to.equal(1.5);
-    expect(parseVolume("2.5", "oz")).to.equal(0.084535325);
+    expect(parseVolume("2.5", "oz")).to.equal(73.93358930127731);
   });
   it("should handle values with spaces", () => {
     expect(parseVolume(" 100 ", "mL")).to.equal(100);
-    expect(parseVolume(" 10 ", "oz")).to.equal(0.3381413);
+    expect(parseVolume(" 10 ", "oz")).to.equal(295.73435720510923);
   });
   it("should handle values with commas", () => {
     expect(parseVolume("1,000", "mL")).to.equal(1000);
-    expect(parseVolume("1,000", "oz")).to.equal(33.81413);
+    expect(parseVolume("1,000", "oz")).to.equal(29573.435720510923);
   });
   it("should handle large numbers", () => {
     expect(parseVolume("1000000", "mL")).to.equal(1000000);
-    expect(parseVolume("1000000", "oz")).to.equal(33814.13);
+    expect(parseVolume("1000000", "oz")).to.equal(29573435.720510926);
   });
   it("should handle very small numbers", () => {
     expect(parseVolume("0.1", "mL")).to.equal(0.1);
-    expect(parseVolume("0.1", "oz")).to.be.closeTo(0.003381413, 0.000000001);
+    expect(parseVolume("0.1", "oz")).to.be.closeTo(2.9573435720510926, 0.000000001);
   });
   it("should handle negative numbers", () => {
     expect(parseVolume("-100", "mL")).to.equal(-100);
-    expect(parseVolume("-10", "oz")).to.equal(-0.3381413);
+    expect(parseVolume("-10", "oz")).to.equal(-295.73435720510923);
   });
   it("should handle zero", () => {
     expect(parseVolume("0", "mL")).to.equal(0);
@@ -513,6 +513,18 @@ describe("test parseVolume()", () => {
   });
   it("should handle scientific notation", () => {
     expect(parseVolume("1e3", "mL")).to.equal(1000);
-    expect(parseVolume("1e-3", "oz")).to.equal(0.00003381413);
+    expect(parseVolume("1e-3", "oz")).to.equal(0.029573435720510924);
+  });
+  it("should parse unit indicators from input string", () => {
+    expect(parseVolume("100 mL")).to.equal(100);
+    expect(parseVolume("10 oz")).to.equal(295.73435720510923);
+    expect(parseVolume("100 milliliter")).to.equal(100);
+    expect(parseVolume("10 ounce")).to.equal(295.73435720510923);
+  });
+  it("should handle mixed case unit indicators", () => {
+    expect(parseVolume("100 ML")).to.equal(100);
+    expect(parseVolume("10 OZ")).to.equal(295.73435720510923);
+    expect(parseVolume("100 Milliliter")).to.equal(100);
+    expect(parseVolume("10 Ounce")).to.equal(295.73435720510923);
   });
 });

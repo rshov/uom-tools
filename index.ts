@@ -377,16 +377,47 @@ export function formatVolume(
 
 /**
  * Parses a string and returns a volume in mL or fluid ounces.
+ * Supports parsing volumes with unit indicators like "100 mL" or "10 oz".
  * @param input The input string to parse
  * @param unitOfMeasure The units to use, VolumeUnitOfMeasure
  * @returns The volume as a decimal number in the given units
  * @throws an error if the string format cannot be parsed
  */
-export function parseVolume(input: string, unitOfMeasure: VolumeUnitOfMeasure) {
-  if (unitOfMeasure === "mL") {
-    return Number(input.replaceAll(",", "").trim());
+export function parseVolume(input: string, unitOfMeasure?: VolumeUnitOfMeasure) {
+  if (!input) {
+    return 0;
+  }
+
+  // Parse unit indicators from input string
+  const inputLower = input.toLowerCase();
+  let detectedUnit: VolumeUnitOfMeasure | null = null;
+  
+  if (inputLower.includes("ml") || inputLower.includes("milliliter")) {
+    detectedUnit = "mL";
+  } else if (inputLower.includes("oz") || inputLower.includes("ounce")) {
+    detectedUnit = "oz";
+  }
+
+  // Remove unit indicators and clean the input
+  let cleanInput = input
+    .replaceAll(/ml|milliliter/gi, "")
+    .replaceAll(/oz|ounce/gi, "")
+    .replaceAll(",", "")
+    .trim();
+
+  const value = Number(cleanInput);
+  if (!isNumber(value)) {
+    throw new Error(INVALID_FORMAT_MSG);
+  }
+
+  // If units were detected in the input, use those; otherwise use the provided unitOfMeasure
+  const targetUnit = detectedUnit || unitOfMeasure;
+
+  if (targetUnit === "mL") {
+    return value;
   } else {
-    return Number(input.replaceAll(",", "").trim()) * 0.03381413;
+    // Convert oz to mL: 1 oz = 29.5735 mL (1 / 0.03381413)
+    return value / 0.03381413;
   }
 }
 

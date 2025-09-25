@@ -95,12 +95,13 @@ export declare function formatFeetDecimal(length: number, uom?: LengthUOM, showU
 export declare function formatVolume(mL: number, unitOfMeasure: VolumeUnitOfMeasure, showUnits: boolean): string;
 /**
  * Parses a string and returns a volume in mL or fluid ounces.
+ * Supports parsing volumes with unit indicators like "100 mL" or "10 oz".
  * @param input The input string to parse
  * @param unitOfMeasure The units to use, VolumeUnitOfMeasure
  * @returns The volume as a decimal number in the given units
  * @throws an error if the string format cannot be parsed
  */
-export declare function parseVolume(input: string, unitOfMeasure: VolumeUnitOfMeasure): number;
+export declare function parseVolume(input: string, unitOfMeasure?: VolumeUnitOfMeasure): number;
 /**
  * Parses a string and returns a length in the target units, or inches if not specified.
  * Supports parsing lengths in millimeters, centimeters, meters, feet and inches (fractional or decimal).
