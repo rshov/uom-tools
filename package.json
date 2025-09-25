@@ -45,7 +45,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rshov/uom-tools.git"
+    "url": "git+https://github.com/rshov/uom-tools.git"
   },
   "bugs": {
     "url": "https://github.com/rshov/uom-tools/issues"
