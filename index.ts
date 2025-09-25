@@ -1,5 +1,5 @@
-const numeral = require("numeral");
-import convert from "convert";
+import numeral from "numeral";
+import { convert } from "convert";
 
 const INVALID_FORMAT_MSG = "Invalid format";
 const MARGIN_OF_ERROR = 0.0001;

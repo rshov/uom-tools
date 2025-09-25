@@ -1,5 +1,5 @@
-const expect = require("chai").expect;
-const {
+import { expect } from "chai";
+import {
   parseFeet,
   parseInches,
   parseFraction,
@@ -8,7 +8,7 @@ const {
   parseMeters,
   parseLength,
   parseVolume,
-} = require("../dist/index");
+} from "../dist/index.js";
 
 describe("test parseFraction()", () => {
   it("should return 0 when input is undefined", () => {

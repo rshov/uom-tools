@@ -1,5 +1,30 @@
-import numeral from "numeral";
-import { convert } from "convert";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.formatWholeFeet = formatWholeFeet;
+exports.formatFractionalInches = formatFractionalInches;
+exports.formatFeetAndFractionalInches = formatFeetAndFractionalInches;
+exports.formatFeetAndDecimalInches = formatFeetAndDecimalInches;
+exports.formatDecimalInches = formatDecimalInches;
+exports.formatMillimeters = formatMillimeters;
+exports.formatCentimeters = formatCentimeters;
+exports.formatMeters = formatMeters;
+exports.formatLength = formatLength;
+exports.formatFeetDecimal = formatFeetDecimal;
+exports.formatVolume = formatVolume;
+exports.parseVolume = parseVolume;
+exports.parseLength = parseLength;
+exports.parseMeters = parseMeters;
+exports.parseCentimeters = parseCentimeters;
+exports.parseMillimeters = parseMillimeters;
+exports.parseInchesAndFeet = parseInchesAndFeet;
+exports.parseFeet = parseFeet;
+exports.parseInches = parseInches;
+exports.parseFraction = parseFraction;
+const numeral_1 = __importDefault(require("numeral"));
+const convert_1 = require("convert");
 const INVALID_FORMAT_MSG = "Invalid format";
 const MARGIN_OF_ERROR = 0.0001;
 /**
@@ -67,8 +92,8 @@ function reduceFraction(numerator, denominator) {
  * @param {Boolean | String} units Whether to include the unit of measure in the formatted string, or the units string to use
  * @returns {String} A formatted string with the number of feet
  */
-export function formatWholeFeet(length, uom = "ft", units) {
-    const ft = uom === "ft" ? length : convert(length, uom).to("ft");
+function formatWholeFeet(length, uom = "ft", units) {
+    const ft = uom === "ft" ? length : (0, convert_1.convert)(length, uom).to("ft");
     const feet = Math.floor(ft);
     const unitStr = units === true
         ? "'"
@@ -77,7 +102,7 @@ export function formatWholeFeet(length, uom = "ft", units) {
             : units === "ft"
                 ? " ft"
                 : units || "";
-    return numeral(feet).format("0,0") + unitStr;
+    return (0, numeral_1.default)(feet).format("0,0") + unitStr;
 }
 /**
  * Formats the number of inches to be displayed as a fractional value.
@@ -88,12 +113,12 @@ export function formatWholeFeet(length, uom = "ft", units) {
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string with the fractional inches.
  */
-export function formatFractionalInches(length, uom = "in", inchFormat = "in16", showUnits) {
-    const inches = uom === "in" ? length : convert(length, uom).to("in");
+function formatFractionalInches(length, uom = "in", inchFormat = "in16", showUnits) {
+    const inches = uom === "in" ? length : (0, convert_1.convert)(length, uom).to("in");
     const units = showUnits ? '"' : "";
     // If it's a whole number then there's no fraction to show
     if (Number.isInteger(inches)) {
-        return numeral(inches).format("0,0") + units;
+        return (0, numeral_1.default)(inches).format("0,0") + units;
     }
     let numerator = getNumerator(inches, inchFormat);
     let denominator = getDenominatorValue(inchFormat);
@@ -103,7 +128,7 @@ export function formatFractionalInches(length, uom = "in", inchFormat = "in16", 
     denominator = pair.denominator;
     const wholeInches = Math.floor(inches);
     let formattedWholeInches = wholeInches
-        ? numeral(wholeInches).format("0,0")
+        ? (0, numeral_1.default)(wholeInches).format("0,0")
         : "";
     // If numerator is zero then display it as a whole number
     if (!numerator) {
@@ -124,8 +149,8 @@ export function formatFractionalInches(length, uom = "in", inchFormat = "in16", 
  * @param {String} inchDisplay How to display inches
  * @returns {String} A formatted string with the number of inches
  */
-export function formatFeetAndFractionalInches(length, uom = "in", inchDisplay = "in16") {
-    const totalInches = uom === "in" ? length : convert(length, uom).to("in");
+function formatFeetAndFractionalInches(length, uom = "in", inchDisplay = "in16") {
+    const totalInches = uom === "in" ? length : (0, convert_1.convert)(length, uom).to("in");
     // Count how many whole feet there are
     const wholeFeet = Math.floor(totalInches / 12);
     // Get the remaining length in inches (should be less than a foot, could be zero)
@@ -151,8 +176,8 @@ export function formatFeetAndFractionalInches(length, uom = "in", inchDisplay = 
  * @param {LengthUOM} uom The units of the given length
  * @returns {String} A formatted string with the number of inches
  */
-export function formatFeetAndDecimalInches(length, uom = "in") {
-    const totalInches = uom === "in" ? length : convert(length, uom).to("in");
+function formatFeetAndDecimalInches(length, uom = "in") {
+    const totalInches = uom === "in" ? length : (0, convert_1.convert)(length, uom).to("in");
     // Count how many whole feet there are
     const wholeFeet = Math.floor(totalInches / 12);
     // Get the remaining length in inches (should be less than a foot, could be zero)
@@ -179,10 +204,10 @@ export function formatFeetAndDecimalInches(length, uom = "in") {
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string with the number of inches
  */
-export function formatDecimalInches(length, uom = "in", showUnits) {
-    const inches = uom === "in" ? length : convert(length, uom).to("in");
+function formatDecimalInches(length, uom = "in", showUnits) {
+    const inches = uom === "in" ? length : (0, convert_1.convert)(length, uom).to("in");
     const units = showUnits ? '"' : "";
-    return numeral(inches).format("0,0.[00]") + units;
+    return (0, numeral_1.default)(inches).format("0,0.[00]") + units;
 }
 /**
  * Formats a length for display in millimeters.
@@ -191,10 +216,10 @@ export function formatDecimalInches(length, uom = "in", showUnits) {
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string with the number of millimeters
  */
-export function formatMillimeters(length, uom = "mm", showUnits) {
-    const mm = uom === "mm" ? length : convert(length, uom).to("mm");
+function formatMillimeters(length, uom = "mm", showUnits) {
+    const mm = uom === "mm" ? length : (0, convert_1.convert)(length, uom).to("mm");
     const unitStr = showUnits ? " mm" : "";
-    return numeral(mm).format("0,0") + unitStr;
+    return (0, numeral_1.default)(mm).format("0,0") + unitStr;
 }
 /**
  * Formats a length for display in centimeters, allowing up to 1 decimal place.
@@ -203,10 +228,10 @@ export function formatMillimeters(length, uom = "mm", showUnits) {
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string with the number of centimeters
  */
-export function formatCentimeters(length, uom = "cm", showUnits) {
-    const cm = uom === "cm" ? length : convert(length, uom).to("cm");
+function formatCentimeters(length, uom = "cm", showUnits) {
+    const cm = uom === "cm" ? length : (0, convert_1.convert)(length, uom).to("cm");
     const unitStr = showUnits ? " cm" : "";
-    return numeral(cm).format("0,0.[0]") + unitStr;
+    return (0, numeral_1.default)(cm).format("0,0.[0]") + unitStr;
 }
 /**
  * Formats a length for display in meters, allowing up to 2 decimal places.
@@ -215,10 +240,10 @@ export function formatCentimeters(length, uom = "cm", showUnits) {
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string with the number of meters
  */
-export function formatMeters(length, uom = "m", showUnits) {
-    const m = uom === "m" ? length : convert(length, uom).to("m");
+function formatMeters(length, uom = "m", showUnits) {
+    const m = uom === "m" ? length : (0, convert_1.convert)(length, uom).to("m");
     const unitStr = showUnits ? " m" : "";
-    return numeral(m).format("0,0.[00]") + unitStr;
+    return (0, numeral_1.default)(m).format("0,0.[00]") + unitStr;
 }
 /**
  * Formats a length for display in the display format and units.
@@ -229,7 +254,7 @@ export function formatMeters(length, uom = "m", showUnits) {
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string in the given unit of measure
  */
-export function formatLength(length = 0, uom = "in", displayFormat = "in", inchFormat = "in16", showUnits) {
+function formatLength(length = 0, uom = "in", displayFormat = "in", inchFormat = "in16", showUnits) {
     switch (displayFormat) {
         case "mm":
             return formatMillimeters(length, uom, showUnits);
@@ -252,10 +277,10 @@ export function formatLength(length = 0, uom = "in", displayFormat = "in", inchF
 /**
  * Formats a number of feet for display with 2 decimal places and the units 'ft'.
  */
-export function formatFeetDecimal(length, uom = "ft", showUnits) {
-    const ft = uom === "ft" ? length : convert(length, uom).to("ft");
+function formatFeetDecimal(length, uom = "ft", showUnits) {
+    const ft = uom === "ft" ? length : (0, convert_1.convert)(length, uom).to("ft");
     const units = showUnits ? " ft" : "";
-    return numeral(ft).format("0,0.[00]") + units;
+    return (0, numeral_1.default)(ft).format("0,0.[00]") + units;
 }
 /**
  * Formats a volume for display in mL or fluid ounces.
@@ -264,15 +289,15 @@ export function formatFeetDecimal(length, uom = "ft", showUnits) {
  * @param {Boolean} showUnits Whether to include the unit of measure in the formatted string
  * @returns {String} A formatted string in the given unit of measure
  */
-export function formatVolume(mL, unitOfMeasure, showUnits) {
+function formatVolume(mL, unitOfMeasure, showUnits) {
     if (unitOfMeasure === "mL") {
         const units = showUnits ? " mL" : "";
-        return numeral(mL).format("0,0") + units;
+        return (0, numeral_1.default)(mL).format("0,0") + units;
     }
     else {
         const fluidOunces = mL * 0.03381413;
         const units = showUnits ? " oz" : "";
-        return numeral(fluidOunces).format("0,0.[0]") + units;
+        return (0, numeral_1.default)(fluidOunces).format("0,0.[0]") + units;
     }
 }
 /**
@@ -282,7 +307,7 @@ export function formatVolume(mL, unitOfMeasure, showUnits) {
  * @returns The volume as a decimal number in the given units
  * @throws an error if the string format cannot be parsed
  */
-export function parseVolume(input, unitOfMeasure) {
+function parseVolume(input, unitOfMeasure) {
     if (unitOfMeasure === "mL") {
         return Number(input.replaceAll(",", "").trim());
     }
@@ -307,7 +332,7 @@ function isNumber(num) {
  * @returns The length as a decimal number in the target units
  * @throws an error if the string format cannot be parsed
  */
-export function parseLength(input, targetUnit = "in", defaultUnit) {
+function parseLength(input, targetUnit = "in", defaultUnit) {
     if (!input) {
         return 0;
     }
@@ -322,20 +347,20 @@ export function parseLength(input, targetUnit = "in", defaultUnit) {
         input.includes("in") ||
         input.includes('"')) {
         const inches = parseInchesAndFeet(input, defaultUnit);
-        return convert(inches, "in").to(targetUnit);
+        return (0, convert_1.convert)(inches, "in").to(targetUnit);
     }
     else if (input.includes("mm") || input.includes("millimeter")) {
         const mm = parseMillimeters(input);
-        return convert(mm, "mm").to(targetUnit);
+        return (0, convert_1.convert)(mm, "mm").to(targetUnit);
     }
     else if (input.includes("cm") || input.includes("centimeter")) {
         const cm = parseCentimeters(input);
-        return convert(cm, "cm").to(targetUnit);
+        return (0, convert_1.convert)(cm, "cm").to(targetUnit);
     }
     else if (input.includes("m")) {
         // This also covers 'meter' and 'meters'
         const m = parseMeters(input);
-        return convert(m, "m").to(targetUnit);
+        return (0, convert_1.convert)(m, "m").to(targetUnit);
     }
     else {
         // No units were specified, so try to parse as a number
@@ -344,12 +369,12 @@ export function parseLength(input, targetUnit = "in", defaultUnit) {
             if (defaultUnit === "ft" && targetUnit === "in") {
                 return num * 12; // Workaround for floating point problem with convert library
             }
-            return convert(num, defaultUnit).to(targetUnit);
+            return (0, convert_1.convert)(num, defaultUnit).to(targetUnit);
         }
     }
     throw new Error(INVALID_FORMAT_MSG);
 }
-export function parseMeters(input) {
+function parseMeters(input) {
     if (!input)
         return 0;
     const str = input
@@ -364,7 +389,7 @@ export function parseMeters(input) {
     }
     throw new Error(INVALID_FORMAT_MSG);
 }
-export function parseCentimeters(input) {
+function parseCentimeters(input) {
     if (!input)
         return 0;
     const str = input
@@ -379,7 +404,7 @@ export function parseCentimeters(input) {
     }
     throw new Error(INVALID_FORMAT_MSG);
 }
-export function parseMillimeters(input) {
+function parseMillimeters(input) {
     if (!input)
         return 0;
     const str = input
@@ -414,7 +439,7 @@ export function parseMillimeters(input) {
  * @returns The number of feet as a decimal number
  * @throws an error if the string format cannot be parsed
  */
-export function parseInchesAndFeet(input, defaultUnit = "in") {
+function parseInchesAndFeet(input, defaultUnit = "in") {
     if (!input)
         return 0;
     // Strip out any comma separators
@@ -448,7 +473,7 @@ export function parseInchesAndFeet(input, defaultUnit = "in") {
  * Parses a string containing feet and returns the number of feet.
  * Note that the string may also contain inches after the feet but only the feet number will be returned.
  */
-export function parseFeet(input) {
+function parseFeet(input) {
     if (!input)
         return 0;
     let str = standardizeFeetSymbol(input).replaceAll(",", "");
@@ -480,7 +505,7 @@ export function parseFeet(input) {
  *   6 1/4"    // With fraction, separated by a space
  * @throws an error if the string format cannot be parsed
  */
-export function parseInches(input) {
+function parseInches(input) {
     if (!input)
         return 0;
     let str = standardizeFeetSymbol(input).replaceAll(",", "");
@@ -513,7 +538,7 @@ export function parseInches(input) {
  * For example, "1/4" would return 0.25
  * @throws an error if the string cannot be parsed as a fraction
  */
-export function parseFraction(input) {
+function parseFraction(input) {
     if (!input)
         return 0;
     let str = replaceInchSymbolBySpace(input).replaceAll(",", "");

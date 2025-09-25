@@ -1,5 +1,5 @@
-const expect = require("chai").expect;
-const {
+import { expect } from "chai";
+import {
   formatFractionalInches,
   formatFeetAndFractionalInches,
   formatFeetAndDecimalInches,
@@ -11,7 +11,7 @@ const {
   formatMeters,
   formatLength,
   formatVolume,
-} = require("../dist/index");
+} from "../dist/index.js";
 
 describe("test formatFractionalInches()", () => {
   it("should format 0 as 0", () => {
