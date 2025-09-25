@@ -29,6 +29,11 @@ export type InchDisplayFormat =
 
 export type VolumeUnitOfMeasure = "mL" | "oz";
 
+export const LengthUOMs: LengthUOM[] = ["mm", "cm", "m", "in", "ft"] as const;
+export const LengthDisplayFormats: LengthDisplayFormat[] = ["mm", "cm", "m", "in", "ft", "ft_in"] as const;
+export const InchDisplayFormats: InchDisplayFormat[] = ["in", "in16", "in32", "in64"] as const;
+export const VolumeUnitOfMeasures: VolumeUnitOfMeasure[] = ["mL", "oz"] as const;
+
 /**
  * Gets the numerator for a fraction based on the given number and units to display.
  * If the given number is a whole number, then 0 is returned.
